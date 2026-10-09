@@ -1,0 +1,7 @@
+# personal settings and statistics
+invoker_bot.ini
+invoker_stats.csv
+invoker_spells.ini
+
+# compiled builds (published via GitHub Releases)
+*.exe

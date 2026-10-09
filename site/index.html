@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invoker Game Bot</title>
+<meta name="description" content="AutoHotkey v2 coach and trainer for invoker-game.com: live combo hints, practice without the site, statistics and a progress chart. Educational project.">
+<meta property="og:title" content="Invoker Game Bot">
+<meta property="og:description" content="Learn Invoker's combos: live hints, timed practice with spell icons, progress chart.">
+<meta property="og:image" content="img/social-preview.png">
+<link rel="icon" href="img/icon.ico">
+<style>
+  :root {
+    --bg: #0f1117; --card: #1a1d27; --field: #252936; --text: #e6e8ef; --muted: #8b90a0;
+    --accent: #8b5cf6; --accent2: #a78bfa; --gold1: #fef3c7; --gold2: #f59e0b;
+    --quas: #38bdf8; --wex: #c084fc; --exort: #fb923c;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 "Segoe UI", system-ui, -apple-system, sans-serif;
+    background-image: radial-gradient(1200px 500px at 15% -10%, #2a1a4a 0%, transparent 60%),
+                      radial-gradient(900px 400px at 95% 0%, #13294a 0%, transparent 60%);
+    background-repeat: no-repeat;
+  }
+  a { color: var(--accent2); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; gap: 12px; flex-wrap: wrap; }
+  nav .brand { font: 700 18px Georgia, serif; letter-spacing: .5px; color: var(--gold1); text-decoration: none; }
+  nav .links { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .lang button {
+    background: var(--card); color: var(--muted); border: 1px solid #2c3040; border-radius: 8px;
+    padding: 4px 10px; font: 600 13px "Segoe UI", sans-serif; cursor: pointer;
+  }
+  .lang button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; border-radius: 12px; padding: 12px 22px;
+    font-weight: 600; text-decoration: none; transition: transform .15s, filter .15s;
+  }
+  .btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+  .btn.go { background: linear-gradient(#22c55e, #15803d); color: #fff; box-shadow: 0 6px 24px #16a34a44; }
+  .btn.ghost { background: var(--card); color: var(--text); border: 1px solid #2c3040; }
+  .small { padding: 6px 12px; font-size: 14px; border-radius: 9px; }
+
+  header.hero { text-align: center; padding: 48px 0 24px; }
+  .orbs { display: flex; justify-content: center; gap: 18px; margin-bottom: 18px; }
+  .orbs span {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff 0, var(--c) 45%, var(--c) 100%);
+    box-shadow: 0 0 22px var(--c), 0 0 48px color-mix(in srgb, var(--c) 40%, transparent);
+  }
+  h1 {
+    font: 700 clamp(40px, 8vw, 76px)/1.05 Georgia, serif; margin: 0 0 10px; letter-spacing: 1px;
+    background: linear-gradient(var(--gold1), var(--gold2)); -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 18px #f59e0b55);
+  }
+  .tagline { letter-spacing: 6px; text-transform: uppercase; color: #c4b5fd; font-weight: 600; font-size: 15px; margin-bottom: 14px; }
+  .lead { max-width: 680px; margin: 0 auto 26px; color: #cfd2de; font-size: 18px; }
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .meta { margin-top: 14px; color: var(--muted); font-size: 14px; }
+
+  .note {
+    margin: 36px auto 0; max-width: 820px; background: #1d1830; border: 1px solid #3b2f63;
+    border-left: 4px solid var(--accent); border-radius: 12px; padding: 14px 18px; font-size: 15px; color: #d9d3f5;
+  }
+  section { padding: 56px 0 8px; }
+  h2 { font: 700 30px Georgia, serif; margin: 0 0 8px; color: var(--gold1); }
+  .sub { color: var(--muted); margin: 0 0 24px; }
+  .shot { width: 100%; border-radius: 16px; border: 1px solid #2c3040; box-shadow: 0 20px 60px #0008; display: block; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .card { background: var(--card); border: 1px solid #262a38; border-radius: 16px; padding: 20px; }
+  .card h3 { margin: 6px 0 6px; font-size: 18px; }
+  .card p { margin: 0; color: #c3c7d4; font-size: 15px; }
+  .ico { font-size: 22px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; }
+  .two ul { padding-left: 20px; margin: 0; color: #cfd2de; }
+  .two li { margin: 6px 0; }
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  ol.steps li { counter-increment: s; background: var(--card); border: 1px solid #262a38; border-radius: 14px; padding: 14px 16px 14px 56px; position: relative; }
+  ol.steps li::before {
+    content: counter(s); position: absolute; left: 16px; top: 13px; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px;
+  }
+  kbd { background: var(--field); border: 1px solid #343a4c; border-bottom-width: 2px; border-radius: 6px; padding: 1px 7px; font: 600 13px "Segoe UI", sans-serif; }
+  footer { padding: 48px 0 40px; color: var(--muted); font-size: 14px; text-align: center; }
+  footer p { margin: 6px 0; }
+  /* язык: прячем только текст другого языка, видимому ничего не переопределяем */
+  html:not([lang="ru"]) [data-ru] { display: none !important; }
+  html[lang="ru"] [data-en] { display: none !important; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } .tagline { letter-spacing: 3px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="brand" href="#">INVOKER BOT</a>
+    <div class="links">
+      <span class="lang"><button id="en" class="on">EN</button> <button id="ru">RU</button></span>
+      <a class="btn ghost small" href="https://github.com/virtristis/invoker-game-bot">GitHub</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="orbs"><span style="--c: var(--quas)"></span><span style="--c: var(--wex)"></span><span style="--c: var(--exort)"></span></div>
+    <h1>INVOKER BOT</h1>
+    <div class="tagline">Bot · Coach · Practice</div>
+    <p class="lead" data-en>An AutoHotkey v2 coach for <a href="https://invoker-game.com/">invoker-game.com</a>. Live combo hints while you play, timed practice with spell icons, and a progress chart that shows you getting faster. New (10 spells) and Old (27 spells) Invoker.</p>
+    <p class="lead" data-ru>Тренер на AutoHotkey v2 для <a href="https://invoker-game.com/">invoker-game.com</a>: подсказки комбинаций прямо во время игры, тренировка с иконками спеллов и засечкой времени, график, на котором видно, как ты становишься быстрее. New (10 спеллов) и Old (27 спеллов).</p>
+    <div class="cta">
+      <a class="btn go" href="https://github.com/virtristis/invoker-game-bot/releases/latest"><span data-en>⬇ Download for Windows</span><span data-ru>⬇ Скачать для Windows</span></a>
+      <a class="btn ghost" href="https://github.com/virtristis/invoker-game-bot"><span data-en>Source on GitHub</span><span data-ru>Исходник на GitHub</span></a>
+    </div>
+    <div class="meta" data-en>Windows 10 / 11 · no install, no AutoHotkey needed · EN · RU · ES · 中文 · MIT</div>
+    <div class="meta" data-ru>Windows 10 / 11 · без установки, AutoHotkey не нужен · EN · RU · ES · 中文 · MIT</div>
+    <div class="note" data-en><b>Educational project.</b> It shows how a desktop app can read a web page through Windows UI Automation, and it helps people learn Invoker. It is <b>not</b> for setting records or climbing leaderboards. Please don't submit bot runs.</div>
+    <div class="note" data-ru><b>Учебный проект.</b> Он показывает, как программа для рабочего стола читает веб-страницу через Windows UI Automation, и помогает учить Инвокера. Он <b>не</b> для рекордов и таблицы лидеров. Пожалуйста, не отправляй результаты бота.</div>
+  </header>
+
+  <section>
+    <img class="shot" src="img/banner.png" alt="Invoker Bot windows in three colour themes and four languages">
+  </section>
+
+  <section>
+    <h2 data-en>What it does</h2><h2 data-ru>Что умеет</h2>
+    <p class="sub" data-en>Everything is drawn by the app itself: dark interface, three colour themes, vertical or horizontal layout.</p>
+    <p class="sub" data-ru>Весь интерфейс программа рисует сама: тёмная тема, три цветовые схемы, вертикальная или горизонтальная раскладка.</p>
+    <div class="grid">
+      <div class="card"><div class="ico">🎓</div><h3 data-en>Coach</h3><h3 data-ru>Тренер</h3>
+        <p data-en>Presses nothing. An overlay above the game shows the combo in orb colours and lights up the keys you've pressed. Drag it anywhere, resize it by the corner or with the mouse wheel.</p>
+        <p data-ru>Ничего не нажимает. Оверлей поверх игры показывает комбинацию в цветах шаров и подсвечивает нажатое. Его можно перетащить и растянуть за уголок или колесом мыши.</p></div>
+      <div class="card"><div class="ico">🎯</div><h3 data-en>Practice without the site</h3><h3 data-ru>Тренировка без сайта</h3>
+        <p data-en>The app shows a spell icon, you build the orbs and press R. Every spell is timed. “Only my weak spells” drills your slowest ones.</p>
+        <p data-ru>Программа показывает иконку спелла, ты собираешь шары и жмёшь R. Каждый спелл засекается. «Только мои слабые» гоняет самые медленные.</p></div>
+      <div class="card"><div class="ico">📈</div><h3 data-en>Progress chart</h3><h3 data-ru>График прогресса</h3>
+        <p data-en>Seconds per spell for every coach and practice run, New and Old separately. Hover a point to see the run.</p>
+        <p data-ru>Секунды на спелл по каждому прогону тренера и тренировки, отдельно New и Old. Наведи на точку, чтобы увидеть прогон.</p></div>
+      <div class="card"><div class="ico">🤖</div><h3 data-en>Bot</h3><h3 data-ru>Бот</h3>
+        <p data-en>Plays by itself at the speed you set, to show what's possible. For learning only, never for the leaderboard.</p>
+        <p data-ru>Проходит игру сам с заданной скоростью, чтобы показать, что возможно. Только для обучения, не для таблицы рекордов.</p></div>
+      <div class="card"><div class="ico">🔔</div><h3 data-en>Sounds and volume</h3><h3 data-ru>Звуки и громкость</h3>
+        <p data-en>Five built-in sounds, the Windows sound or your own file, with a volume slider.</p>
+        <p data-ru>Пять встроенных звуков, звук Windows или свой файл, плюс ползунок громкости.</p></div>
+      <div class="card"><div class="ico">⬆️</div><h3 data-en>One-click update</h3><h3 data-ru>Обновление в один клик</h3>
+        <p data-en>When a new version is out, one click downloads it, checks its SHA-256 and restarts the app.</p>
+        <p data-ru>Когда выходит новая версия, один клик скачивает её, проверяет SHA-256 и перезапускает программу.</p></div>
+    </div>
+  </section>
+
+  <section class="two">
+    <div>
+      <h2 data-en>Train like in the game</h2><h2 data-ru>Как в игре</h2>
+      <ul data-en>
+        <li>Spell icons as in the game: Valve's Dota 2 icons for New, invoker-game.com's for Old.</li>
+        <li>The hint appears only after 2.5 seconds or a mistake, so you practise remembering.</li>
+        <li>In New the orb order doesn't matter, in Old it does, exactly like the game.</li>
+        <li>Every spell time goes to your statistics, so your weak spots update as you improve.</li>
+      </ul>
+      <ul data-ru>
+        <li>Иконки спеллов как в игре: для New — иконки Dota 2 от Valve, для Old — с invoker-game.com.</li>
+        <li>Подсказка появляется только через 2,5 секунды или после ошибки, так тренируется память.</li>
+        <li>В New порядок шаров не важен, в Old важен — ровно как в игре.</li>
+        <li>Время каждого спелла идёт в статистику, поэтому слабые места обновляются по мере роста.</li>
+      </ul>
+    </div>
+    <img class="shot" src="img/stats.png" alt="Statistics window with the progress chart">
+  </section>
+
+  <section>
+    <img class="shot" src="img/practice.png" alt="Practice window: spell icon, orbs, hint and results">
+  </section>
+
+  <section>
+    <h2 data-en>Get started</h2><h2 data-ru>Как начать</h2>
+    <ol class="steps" data-en>
+      <li>Download <b>InvokerGameBot-vX.Y.Z.exe</b> from <a href="https://github.com/virtristis/invoker-game-bot/releases/latest">Releases</a> and run it. Settings live in <code>%APPDATA%\InvokerGameBot</code>.</li>
+      <li><b>Practice:</b> pick Practice, New or Old, press <kbd>F1</kbd> and then <kbd>Space</kbd>.</li>
+      <li><b>Coach:</b> pick Coach, press <kbd>F1</kbd>, open invoker-game.com and press Start Game. Follow the overlay.</li>
+      <li>After a few runs open <b>Statistics</b>: find your slowest spells and switch on “Only my weak spells”.</li>
+    </ol>
+    <ol class="steps" data-ru>
+      <li>Скачай <b>InvokerGameBot-vX.Y.Z.exe</b> из <a href="https://github.com/virtristis/invoker-game-bot/releases/latest">Releases</a> и запусти. Настройки хранятся в <code>%APPDATA%\InvokerGameBot</code>.</li>
+      <li><b>Тренировка:</b> выбери «Тренировка», New или Old, нажми <kbd>F1</kbd>, потом <kbd>Пробел</kbd>.</li>
+      <li><b>Тренер:</b> выбери «Тренер», нажми <kbd>F1</kbd>, открой invoker-game.com и нажми Start Game. Следуй подсказкам оверлея.</li>
+      <li>Через несколько прогонов открой <b>Статистику</b>: найди медленные спеллы и включи «Только мои слабые спеллы».</li>
+    </ol>
+  </section>
+
+  <footer>
+    <p data-en>Made by <a href="https://github.com/virtristis">virtristis</a> · MIT License · <a href="https://github.com/virtristis/invoker-game-bot/blob/main/CHANGELOG.md">Changelog</a></p>
+    <p data-ru>Сделал <a href="https://github.com/virtristis">virtristis</a> · лицензия MIT · <a href="https://github.com/virtristis/invoker-game-bot/blob/main/CHANGELOG.md">Изменения</a></p>
+    <p data-en>Not affiliated with invoker-game.com, its author, or Valve. Dota 2 and Invoker are trademarks of Valve Corporation.</p>
+    <p data-ru>Проект не связан с invoker-game.com, его автором или Valve. Dota 2 и Invoker — товарные знаки Valve Corporation.</p>
+  </footer>
+</div>
+<script>
+  (function () {
+    var pick = function (lang) {
+      document.documentElement.lang = lang;
+      document.getElementById('en').classList.toggle('on', lang === 'en');
+      document.getElementById('ru').classList.toggle('on', lang === 'ru');
+      try { localStorage.setItem('lang', lang); } catch (e) {}
+    };
+    var saved = null;
+    try { saved = localStorage.getItem('lang'); } catch (e) {}
+    pick(saved || ((navigator.language || '').slice(0, 2) === 'ru' ? 'ru' : 'en'));
+    document.getElementById('en').onclick = function () { pick('en'); };
+    document.getElementById('ru').onclick = function () { pick('ru'); };
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+name: Build release
+
+# Builds InvokerGameBot-<version>.exe from invoker_bot.ahk (+ lib/) on GitHub's servers,
+# so anyone can check that the published .exe comes from this exact source.
+# Tests run first: a release is never built from code that fails them.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      # e.g. InvokerGameBot-v1.8.4.exe (manual runs: InvokerGameBot-dev.exe)
+      EXE_NAME: InvokerGameBot-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'dev' }}.exe
+      SRC_NAME: InvokerGameBot-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'dev' }}-source.zip
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download AutoHotkey v2 and Ahk2Exe
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ProgressPreference = 'SilentlyContinue'
+          # official builds from github.com/AutoHotkey (autohotkey.com blocks CI runners);
+          # GitHub sometimes answers 500, so each download is retried
+          foreach ($pkg in @(@('AutoHotkey/AutoHotkey', 'AutoHotkey_2*.zip', 'ahk'), @('AutoHotkey/Ahk2Exe', 'Ahk2Exe*.zip', 'ahk2exe'))) {
+            foreach ($try in 1..3) {
+              gh release download --repo $pkg[0] --pattern $pkg[1] --output "$($pkg[2]).zip" --clobber
+              if (Test-Path "$($pkg[2]).zip") { break }
+              Start-Sleep 10
+            }
+            Expand-Archive "$($pkg[2]).zip" $pkg[2]
+          }
+          Get-ChildItem ahk, ahk2exe -Recurse -Filter *.exe | Select-Object FullName
+
+      - name: Run tests
+        shell: pwsh
+        run: |
+          $ahk = (Get-ChildItem ahk -Recurse -Filter AutoHotkey64.exe | Select-Object -First 1).FullName
+          $p = Start-Process $ahk -ArgumentList '/ErrorStdOut=UTF-8', 'tests\run_tests.ahk' -Wait -PassThru -NoNewWindow -RedirectStandardOutput out.txt -RedirectStandardError err.txt
+          Get-Content out.txt, err.txt
+          if ($p.ExitCode -ne 0) { throw "Tests failed" }
+
+      - name: Compile
+        shell: pwsh
+        run: |
+          $base = (Get-ChildItem ahk -Recurse -Filter AutoHotkey64.exe | Select-Object -First 1).FullName
+          $compiler = (Get-ChildItem ahk2exe -Recurse -Filter Ahk2Exe.exe | Select-Object -First 1).FullName
+          $out = "$PWD\$env:EXE_NAME"
+          $p = Start-Process $compiler -ArgumentList '/in', "`"$PWD\invoker_bot.ahk`"", '/out', "`"$out`"", '/base', "`"$base`"", '/silent', 'verbose' -Wait -PassThru -NoNewWindow
+          if ($p.ExitCode -ne 0 -or -not (Test-Path $out)) { throw "Ahk2Exe failed ($($p.ExitCode))" }
+          # the source for AutoHotkey v2: main script + modules + icon
+          Compress-Archive -Path invoker_bot.ahk, lib, assets, LICENSE, README.md -DestinationPath $env:SRC_NAME
+          $lines = foreach ($f in $env:EXE_NAME, $env:SRC_NAME) { "$f  $((Get-FileHash $f -Algorithm SHA256).Hash)" }
+          $lines | Set-Content SHA256SUMS.txt
+          Get-Content SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: InvokerGameBot
+          path: |
+            ${{ env.EXE_NAME }}
+            ${{ env.SRC_NAME }}
+            SHA256SUMS.txt
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = '${{ github.ref_name }}'
+          $ver = $tag.TrimStart('v')
+          $exe = $env:EXE_NAME
+          $src = $env:SRC_NAME
+          # release notes = this version's section of CHANGELOG.md
+          $log = Get-Content CHANGELOG.md -Raw
+          $m = [regex]::Match($log, "(?s)## \[$([regex]::Escape($ver))\][^\n]*\n(.*?)(?=\n## \[|\n\[\d)")
+          $notes = if ($m.Success) { $m.Groups[1].Value.Trim() } else { "See CHANGELOG.md" }
+          $sha = Get-Content SHA256SUMS.txt
+          $body = @"
+          > [!IMPORTANT]
+          > Educational project, **not for setting records or climbing leaderboards**. Please don't submit bot runs.
+
+          $notes
+
+          ### Download
+          - **$exe**: runs without AutoHotkey (Windows 10/11, 64-bit). Built by GitHub Actions from the source of this tag.
+          - **$src**: the source (``invoker_bot.ahk`` + ``lib``), for AutoHotkey v2.
+
+          Already on 1.8.2 or newer? Click the update line in the app's header to update in one click.
+
+          The .exe is not code-signed, so SmartScreen or an antivirus may warn about it. SHA-256:
+          ``````
+          $sha
+          ``````
+
+          Made by [virtristis](https://github.com/virtristis) · MIT License
+          "@
+          $body = ($body -split "`n" | ForEach-Object { $_ -replace '^ {10}', '' }) -join "`n"
+          $body | Set-Content notes.md
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag $exe $src SHA256SUMS.txt --clobber
+            gh release edit $tag --notes-file notes.md
+          } else {
+            gh release create $tag $exe $src SHA256SUMS.txt --title "Invoker Game Bot $tag" --notes-file notes.md --latest
+          }

@@ -1,0 +1,40 @@
+name: Tests
+
+# Logic tests of the coach / practice (tests/run_tests.ahk) and a syntax check
+# of the whole app, on every push and pull request.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download AutoHotkey v2
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ProgressPreference = 'SilentlyContinue'
+          foreach ($try in 1..3) {
+            gh release download --repo AutoHotkey/AutoHotkey --pattern 'AutoHotkey_2*.zip' --output ahk.zip --clobber
+            if (Test-Path ahk.zip) { break }
+            Start-Sleep 10
+          }
+          Expand-Archive ahk.zip ahk
+
+      - name: Run tests
+        shell: pwsh
+        run: |
+          $ahk = (Get-ChildItem ahk -Recurse -Filter AutoHotkey64.exe | Select-Object -First 1).FullName
+          $p = Start-Process $ahk -ArgumentList '/ErrorStdOut=UTF-8', 'tests\run_tests.ahk' -Wait -PassThru -NoNewWindow -RedirectStandardOutput out.txt -RedirectStandardError err.txt
+          Get-Content out.txt, err.txt
+          if ($p.ExitCode -ne 0) { throw "Tests failed" }
+          $p = Start-Process $ahk -ArgumentList '/ErrorStdOut=UTF-8', '/Validate', 'invoker_bot.ahk' -Wait -PassThru -NoNewWindow -RedirectStandardError val.txt
+          Get-Content val.txt
+          if ($p.ExitCode -ne 0) { throw "invoker_bot.ahk does not load" }
+          "Syntax check OK"

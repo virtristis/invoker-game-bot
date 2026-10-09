@@ -1,0 +1,49 @@
+name: Bug report / Сообщить об ошибке
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report! You can write in English, Русский, Español or 中文.
+  - type: input
+    id: version
+    attributes:
+      label: Version / Версия
+      description: Shown at the bottom of the app window (for example v1.8.2)
+      placeholder: v1.8.2
+    validations:
+      required: true
+  - type: dropdown
+    id: build
+    attributes:
+      label: How do you run it? / Как запускаешь?
+      options:
+        - InvokerGameBot.exe
+        - invoker_bot.ahk (AutoHotkey v2)
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser / Браузер
+      placeholder: Chrome 141, Brave, Edge…
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode / Режим
+      multiple: true
+      options:
+        - Bot
+        - Coach
+        - New (10 spells)
+        - Old (27 spells)
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / Что произошло?
+      description: Steps to reproduce, what you expected, and what you got. Screenshots of the app window and any error dialog help a lot.
+    validations:
+      required: true
