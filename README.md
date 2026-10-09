@@ -21,7 +21,8 @@ An AutoHotkey v2 bot and **coach** for the [invoker-game.com](https://invoker-ga
 - **Tray / compact mode**: hide the window, and a small overlay shows what the bot is doing
 - Custom **start/stop hotkey** (F1 by default) and custom key bindings
 - A sound and a Windows notification when a run is finished: **pick from 5 built-in sounds, the Windows sound or your own file, with a volume slider** (🔊 button next to the switch)
-- **Intro**: on startup a console-style window draws Invoker in braille dots (click or Esc to skip, `intro=0` in `invoker_bot.ini` turns it off)
+- **Intro**: on startup a console-style window draws Invoker in braille dots, lights up Quas · Wex · Exort and casts **INVOKE!**, then folds into the main window (click or Esc to skip, `intro=0` in `invoker_bot.ini` turns it off)
+- **Sun Strike on exit**: closing the window drops a Sun Strike on it: a golden target circle, a pillar of light, sparks, and the window burns away
 - Checks for updates on startup and **updates in one click**: click the line in the header, the app downloads the new `.exe`, checks its SHA-256 and restarts
 - Dark interface in **English, Русский, Español, 中文**
 - **3 colour themes** (violet / blue / gold) and a **vertical or horizontal layout**: switch them with the dots and the ⇆ button in the header. Buttons light up under the mouse and switches slide smoothly

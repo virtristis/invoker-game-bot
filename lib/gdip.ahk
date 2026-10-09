@@ -177,7 +177,10 @@ TitleText(cv, str, x, y, w, h, font, size, align := 0) {
 }
 
 ; снимок окна в PNG через PrintWindow (WM_PRINT: окно и контролы дорисовываются сами — надёжно и на скрытом рабочем столе)
-SaveWindowShot(gui, file) {
+SaveWindowShot(gui, file) => CvSave({bmp: WindowBitmap(gui), g: 0}, file)
+
+; содержимое окна -> GDI+ bitmap (для снимков и эффекта при закрытии)
+WindowBitmap(gui) {
     WinGetClientPos , , &w, &h, gui
     hdc := DllCall("GetDC", "ptr", 0, "ptr")
     mdc := DllCall("CreateCompatibleDC", "ptr", hdc, "ptr")
@@ -186,8 +189,8 @@ SaveWindowShot(gui, file) {
     DllCall("PrintWindow", "ptr", gui.Hwnd, "ptr", mdc, "uint", 1)     ; PW_CLIENTONLY
     DllCall("SelectObject", "ptr", mdc, "ptr", obm)
     DllCall("gdiplus\GdipCreateBitmapFromHBITMAP", "ptr", hbm, "ptr", 0, "ptr*", &bmp := 0)
-    CvSave({bmp: bmp, g: 0}, file)
     DllCall("DeleteObject", "ptr", hbm), DllCall("DeleteDC", "ptr", mdc), DllCall("ReleaseDC", "ptr", 0, "ptr", hdc)
+    return bmp
 }
 
 ; холст -> PNG (для автотестов и картинок в README)

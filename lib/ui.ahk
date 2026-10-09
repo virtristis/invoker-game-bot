@@ -107,6 +107,8 @@ ShowSplash(shotFile := "") {
     info := []
     loop 3
         info.Push(S.Add("Text", "xm y+2 w640 Background" bg))
+    orbPic := S.Add("Picture", "xm y+8 w320 h44")      ; финал: Quas · Wex · Exort → INVOKE!
+    SplashOrbs(orbPic, 0)
     S.SetFont("norm s9 c" C.link, "Consolas")
     tBy := S.Add("Text", "xm y+8 w640 Background" bg)
 
@@ -158,18 +160,150 @@ ShowSplash(shotFile := "") {
         m[1].Text := txt
         Sleep 60
     }
-    if !SplashSkip
-        Sleep 700
+
+    ; 3) шары загораются по очереди, потом вспышка INVOKE!
+    if !SplashSkip {
+        loop 3 {
+            SplashOrbs(orbPic, A_Index)
+            Sleep 170
+        }
+        for fl in [0.4, 0.8, 1, 0.75, 0.55]
+            SplashOrbs(orbPic, 3, fl), Sleep(40)
+        Sleep 600
+    } else
+        SplashOrbs(orbPic, 3, 0.55)
 
     if (shotFile != "")                             ; автотест: снимок заставки
         SaveWindowShot(S, shotFile)
-    ; 3) плавно гаснем
-    loop 10 {
-        WinSetTransparent 255 - A_Index * 25, S
-        Sleep 18
+    ; 4) заставка «втягивается» в главное окно: сжимается к его месту и гаснет
+    WinGetPos &sx, &sy, &sw, &sh, S
+    tw := Round(HW * DPI), th := Round(GH * DPI)
+    MonitorGetWorkArea(MonitorGetPrimary(), &ml, &mt, &mr, &mb)
+    tx := ml + (mr - ml - tw) // 2, ty := mt + (mb - mt - th) // 2
+    loop 14 {
+        k := 1 - (1 - A_Index / 14) ** 3                ; плавное замедление
+        WinMove sx + (tx - sx) * k, sy + (ty - sy) * k, sw + (tw - sw) * k, sh + (th - sh) * k, S
+        WinSetTransparent Round(255 * (1 - k * 0.85)), S
+        Sleep 14
     }
     OnMessage(0x201, SplashClick, 0)
     S.Destroy()
+}
+
+; выход: на окно падает Sun Strike — золотой круг-прицел, столб света, окно сгорает и гаснет.
+; Эффект рисуется поверх снимка окна в отдельном окне FX, само главное окно сразу прячется
+SunStrikeExit(*) {
+    static busy := false
+    if busy
+        return
+    busy := true
+    SaveCfg()
+    try {
+        if DllCall("IsWindowVisible", "ptr", G.Hwnd) && !DllCall("IsIconic", "ptr", G.Hwnd) {
+            snap := WindowBitmap(G)
+            WinGetPos &gx, &gy, , , G
+            FX := Gui("-Caption +AlwaysOnTop +ToolWindow")
+            FX.MarginX := 0, FX.MarginY := 0
+            fxPic := FX.Add("Picture", "x0 y0 w" HW " h" GH)
+            SunStrikeFrame(snap, 0, fxPic)
+            FX.Show("NA x" gx " y" gy " w" HW " h" GH)
+            DllCall("dwmapi\DwmSetWindowAttribute", "ptr", FX.Hwnd, "int", 33, "int*", 2, "int", 4)
+            G.Hide()
+            t0 := A_TickCount
+            loop {
+                ph := Min(1, (A_TickCount - t0) / 750)
+                SunStrikeFrame(snap, ph, fxPic)
+                if (ph > 0.6)
+                    WinSetTransparent Round(255 * (1 - (ph - 0.6) / 0.4)), FX
+                if (ph >= 1)
+                    break
+                Sleep 8
+            }
+            DllCall("gdiplus\GdipDisposeImage", "ptr", snap)
+        }
+    }
+    ExitApp
+}
+
+; кадр Sun Strike в момент ph (0…1) поверх снимка окна snap: в картинку pic или в файл
+SunStrikeFrame(snap, ph, pic := 0, outFile := "") {
+    W := HW, H := GH, cx := W / 2, cy := H * 0.5
+    cv := CvNew(W, H, C.bg)
+    DllCall("gdiplus\GdipDrawImageRect", "ptr", cv.g, "ptr", snap, "float", 0, "float", 0, "float", W, "float", H)
+    ; окно прогорает: оранжевый отсвет, потом темнеет
+    if (ph > 0.3)
+        FillAll(cv, W, H, Solid("F97316", Round(80 * Min(1, (ph - 0.3) / 0.25))))
+    if (ph > 0.5)
+        FillAll(cv, W, H, Solid("0A0A12", Round(170 * Min(1, (ph - 0.5) / 0.5))))
+    ; 1) круг-прицел «на земле»: растёт и пульсирует, пока не упадёт столб
+    if (ph < 0.42) {
+        k := Min(1, ph / 0.22), a := ph < 0.3 ? 230 : Round(230 * (0.42 - ph) / 0.12)
+        r := 34 + 70 * k
+        Glow(cv, cx, cy, r * 1.5, "F59E0B", Round(a * 0.4))
+        for ring in [[r, 3], [r * 0.62, 2]] {
+            DllCall("gdiplus\GdipCreatePen1", "uint", ARGB("FBBF24", a), "float", ring[2], "int", 2, "ptr*", &pen := 0)
+            DllCall("gdiplus\GdipDrawEllipse", "ptr", cv.g, "ptr", pen, "float", cx - ring[1], "float", cy - ring[1] * 0.42,
+                "float", ring[1] * 2, "float", ring[1] * 0.84)
+            DllCall("gdiplus\GdipDeletePen", "ptr", pen)
+        }
+    }
+    ; 2) столб света падает сверху: мягкие края, белое ядро, вспышка в точке удара
+    if (ph >= 0.22 && ph < 0.82) {
+        i := Sin(3.14159 * (ph - 0.22) / 0.6)
+        bottom := H * Min(1, (ph - 0.22) / 0.07)
+        for layer in [[1, 45, "F59E0B"], [0.62, 80, "FBBF24"], [0.34, 140, "FDE68A"], [0.12, 235, "FFFBEB"]] {
+            bw := (70 + 230 * i) * layer[1]
+            br := Linear(cx - bw / 2, 0, cx, 0, layer[3], layer[3], 0, Round(layer[2] * i))   ; к краям — прозрачнее
+            DllCall("gdiplus\GdipFillRectangle", "ptr", cv.g, "ptr", br, "float", cx - bw / 2, "float", 0, "float", bw, "float", bottom)
+            DllCall("gdiplus\GdipDeleteBrush", "ptr", br)
+        }
+        if (bottom >= H * 0.5) {
+            Glow(cv, cx, cy, 100 + 90 * i, "FBBF24", Round(170 * i))
+            Glow(cv, cx, cy, 36 + 24 * i, "FFFFFF", Round(220 * i))
+        }
+    }
+    ; 3) искры разлетаются вверх после удара
+    if (ph > 0.32) {
+        k := (ph - 0.32) / 0.68
+        loop 46 {
+            n := A_Index
+            x := cx + (Mod(n * 73, 101) / 101 - 0.5) * (120 + 260 * k)
+            y := cy + (Mod(n * n * 31 + 7, 97) / 97 - 0.5) * 90 - k * (90 + Mod(n * n * 13, 41) * 5)
+            a := Round(255 * (1 - k))
+            Glow(cv, x, y, 5 + Mod(n, 3) * 2, "FB923C", Round(a * 0.6))
+            Circle(cv, x, y, 0.8 + Mod(n, 3) * 0.5, Solid("FFF7D6", a))
+        }
+    }
+    if (outFile != "")
+        CvSave(cv, outFile)
+    else
+        CvToPic(cv, pic)
+}
+
+FillAll(cv, W, H, br) {                             ; залить весь холст (кисть удаляется)
+    DllCall("gdiplus\GdipFillRectangle", "ptr", cv.g, "ptr", br, "float", 0, "float", 0, "float", W, "float", H)
+    DllCall("gdiplus\GdipDeleteBrush", "ptr", br)
+}
+
+; ряд шаров заставки: k — сколько горит, flash — сила вспышки INVOKE! (0 — ещё нет)
+SplashOrbs(pic, k, flash := 0) {
+    cv := CvNew(320, 44, "0A0A12")
+    for i, col in ["38BDF8", "C084FC", "FB923C"] {
+        cx := 22 + (i - 1) * 46
+        if (i <= k) {
+            Glow(cv, cx, 22, 24, col, 150)
+            Orb(cv, cx, 22, 13, col)
+        } else {
+            Circle(cv, cx, 22, 13, Solid("1A1D27"))
+            Txt(cv, SubStr("QWE", i, 1), cx - 13, 9, 26, 26, "Consolas", 11, 1, col, 1, 120)
+        }
+    }
+    if flash {
+        Glow(cv, 214, 22, 40 + 30 * flash, "FBBF24", Round(110 * flash))
+        TitleText(cv, "INVOKE!", 150, 3, 140, 38, "Georgia", 21, 1)
+    } else
+        Txt(cv, "R", 150, 9, 26, 26, "Consolas", 11, 1, "6B7080", 1)
+    CvToPic(cv, pic)
 }
 
 SplashClick(*) {
@@ -509,7 +643,7 @@ HeaderDown(wParam, lParam, msg, hwnd) {
         case "theme":  SetTheme(parts[2])
         case "layout": ToggleLayout()
         case "min":    WinMinimize(G)
-        case "close":  SaveCfg(), ExitApp()
+        case "close":  SunStrikeExit()
         case "update": DoUpdate()
     }
     return 0

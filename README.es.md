@@ -21,7 +21,8 @@ Un bot y **entrenador** en AutoHotkey v2 para el entrenador [invoker-game.com](h
 - **Bandeja / modo compacto**: la ventana se oculta y una pequeña superposición muestra lo que hace el bot
 - **Tecla de inicio/parada** personalizable (F1 por defecto) y teclas Q/W/E/R personalizadas
 - Un sonido y un aviso de Windows al terminar la partida: **5 sonidos incluidos, el sonido de Windows o tu propio archivo, con control de volumen** (botón 🔊 junto al interruptor)
-- **Intro**: al iniciar, una ventana tipo consola dibuja a Invoker con puntos braille (clic o Esc para saltarla, `intro=0` en `invoker_bot.ini` la desactiva)
+- **Intro**: al iniciar, una ventana tipo consola dibuja a Invoker con puntos braille, enciende Quas · Wex · Exort y lanza **INVOKE!**, y luego se pliega en la ventana principal (clic o Esc para saltarla, `intro=0` en `invoker_bot.ini` la desactiva)
+- **Sun Strike al salir**: al cerrar la ventana cae un Sun Strike sobre ella: un círculo dorado, una columna de luz, chispas, y la ventana se consume
 - Comprueba si hay actualizaciones al iniciar y **se actualiza con un clic**: pulsa la línea de la cabecera, la app descarga el nuevo `.exe`, comprueba su SHA-256 y se reinicia
 - Interfaz oscura en **English, Русский, Español, 中文**
 - **3 temas de color** (violeta / azul / dorado) y **diseño vertical u horizontal**: se cambian con los puntos y el botón ⇆ de la cabecera. Los botones se iluminan al pasar el ratón y los interruptores se deslizan con suavidad
