@@ -19,7 +19,7 @@
   html { scroll-behavior: smooth; }
   body {
     margin: 0; background: var(--bg); color: var(--text);
-    font: 16px/1.6 "Segoe UI", system-ui, -apple-system, sans-serif;
+    font: 16px/1.6 "Segoe UI", system-ui, -apple-system, "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
     background-image: radial-gradient(1200px 500px at 15% -10%, #2a1a4a 0%, transparent 60%),
                       radial-gradient(900px 400px at 95% 0%, #13294a 0%, transparent 60%);
     background-repeat: no-repeat;
@@ -29,9 +29,10 @@
   nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; gap: 12px; flex-wrap: wrap; }
   nav .brand { font: 700 18px Georgia, serif; letter-spacing: .5px; color: var(--gold1); text-decoration: none; }
   nav .links { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .lang { display: inline-flex; gap: 4px; }
   .lang button {
     background: var(--card); color: var(--muted); border: 1px solid #2c3040; border-radius: 8px;
-    padding: 4px 10px; font: 600 13px "Segoe UI", sans-serif; cursor: pointer;
+    padding: 4px 10px; font: 600 13px "Segoe UI", "Microsoft YaHei", sans-serif; cursor: pointer;
   }
   .lang button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
   .btn {
@@ -65,7 +66,7 @@
     border-left: 4px solid var(--accent); border-radius: 12px; padding: 14px 18px; font-size: 15px; color: #d9d3f5;
   }
   section { padding: 56px 0 8px; }
-  h2 { font: 700 30px Georgia, serif; margin: 0 0 8px; color: var(--gold1); }
+  h2 { font: 700 30px Georgia, "Microsoft YaHei", serif; margin: 0 0 8px; color: var(--gold1); }
   .sub { color: var(--muted); margin: 0 0 24px; }
   .shot { width: 100%; border-radius: 16px; border: 1px solid #2c3040; box-shadow: 0 20px 60px #0008; display: block; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
@@ -85,9 +86,9 @@
   kbd { background: var(--field); border: 1px solid #343a4c; border-bottom-width: 2px; border-radius: 6px; padding: 1px 7px; font: 600 13px "Segoe UI", sans-serif; }
   footer { padding: 48px 0 40px; color: var(--muted); font-size: 14px; text-align: center; }
   footer p { margin: 6px 0; }
-  /* язык: прячем только текст другого языка, видимому ничего не переопределяем */
-  html:not([lang="ru"]) [data-ru] { display: none !important; }
-  html[lang="ru"] [data-en] { display: none !important; }
+  /* язык: прячем только тексты других языков, видимому ничего не переопределяем */
+  html:not([lang="en"]) [data-en], html:not([lang="ru"]) [data-ru],
+  html:not([lang="es"]) [data-es], html:not([lang="zh"]) [data-zh] { display: none !important; }
   @media (max-width: 760px) { .two { grid-template-columns: 1fr; } .tagline { letter-spacing: 3px; } }
 </style>
 </head>
@@ -96,7 +97,7 @@
   <nav>
     <a class="brand" href="#">INVOKER BOT</a>
     <div class="links">
-      <span class="lang"><button id="en" class="on">EN</button> <button id="ru">RU</button></span>
+      <span class="lang"><button data-lang="en" class="on">EN</button><button data-lang="ru">RU</button><button data-lang="es">ES</button><button data-lang="zh">中文</button></span>
       <a class="btn ghost small" href="https://github.com/virtristis/invoker-game-bot">GitHub</a>
     </div>
   </nav>
@@ -107,14 +108,20 @@
     <div class="tagline">Bot · Coach · Practice</div>
     <p class="lead" data-en>An AutoHotkey v2 coach for <a href="https://invoker-game.com/">invoker-game.com</a>. Live combo hints while you play, timed practice with spell icons, and a progress chart that shows you getting faster. New (10 spells) and Old (27 spells) Invoker.</p>
     <p class="lead" data-ru>Тренер на AutoHotkey v2 для <a href="https://invoker-game.com/">invoker-game.com</a>: подсказки комбинаций прямо во время игры, тренировка с иконками спеллов и засечкой времени, график, на котором видно, как ты становишься быстрее. New (10 спеллов) и Old (27 спеллов).</p>
+    <p class="lead" data-es>Un entrenador en AutoHotkey v2 para <a href="https://invoker-game.com/">invoker-game.com</a>: pistas de combinaciones mientras juegas, práctica cronometrada con iconos de hechizos y un gráfico que muestra cómo te vuelves más rápido. Invoker New (10 hechizos) y Old (27 hechizos).</p>
+    <p class="lead" data-zh>基于 AutoHotkey v2 的 <a href="https://invoker-game.com/">invoker-game.com</a> 教练：游戏时实时提示组合，带技能图标的计时练习，以及展示你越来越快的进度图表。支持 New（10 个技能）和 Old（27 个技能）卡尔。</p>
     <div class="cta">
-      <a class="btn go" href="https://github.com/virtristis/invoker-game-bot/releases/latest"><span data-en>⬇ Download for Windows</span><span data-ru>⬇ Скачать для Windows</span></a>
-      <a class="btn ghost" href="https://github.com/virtristis/invoker-game-bot"><span data-en>Source on GitHub</span><span data-ru>Исходник на GitHub</span></a>
+      <a class="btn go" href="https://github.com/virtristis/invoker-game-bot/releases/latest"><span data-en>⬇ Download for Windows</span><span data-ru>⬇ Скачать для Windows</span><span data-es>⬇ Descargar para Windows</span><span data-zh>⬇ 下载 Windows 版</span></a>
+      <a class="btn ghost" href="https://github.com/virtristis/invoker-game-bot"><span data-en>Source on GitHub</span><span data-ru>Исходник на GitHub</span><span data-es>Código en GitHub</span><span data-zh>GitHub 源代码</span></a>
     </div>
     <div class="meta" data-en>Windows 10 / 11 · no install, no AutoHotkey needed · EN · RU · ES · 中文 · MIT</div>
     <div class="meta" data-ru>Windows 10 / 11 · без установки, AutoHotkey не нужен · EN · RU · ES · 中文 · MIT</div>
+    <div class="meta" data-es>Windows 10 / 11 · sin instalación, no hace falta AutoHotkey · EN · RU · ES · 中文 · MIT</div>
+    <div class="meta" data-zh>Windows 10 / 11 · 免安装，无需 AutoHotkey · EN · RU · ES · 中文 · MIT</div>
     <div class="note" data-en><b>Educational project.</b> It shows how a desktop app can read a web page through Windows UI Automation, and it helps people learn Invoker. It is <b>not</b> for setting records or climbing leaderboards. Please don't submit bot runs.</div>
     <div class="note" data-ru><b>Учебный проект.</b> Он показывает, как программа для рабочего стола читает веб-страницу через Windows UI Automation, и помогает учить Инвокера. Он <b>не</b> для рекордов и таблицы лидеров. Пожалуйста, не отправляй результаты бота.</div>
+    <div class="note" data-es><b>Proyecto educativo.</b> Muestra cómo una aplicación de escritorio puede leer una página web mediante Windows UI Automation y ayuda a aprender Invoker. <b>No</b> es para batir récords ni subir en las clasificaciones. Por favor, no envíes partidas del bot.</div>
+    <div class="note" data-zh><b>教育项目。</b>它演示了桌面程序如何通过 Windows UI Automation 读取网页，并帮助大家学习卡尔。它<b>不</b>用于刷纪录或冲排行榜。请不要提交机器人的成绩。</div>
   </header>
 
   <section>
@@ -122,34 +129,48 @@
   </section>
 
   <section>
-    <h2 data-en>What it does</h2><h2 data-ru>Что умеет</h2>
+    <h2 data-en>What it does</h2><h2 data-ru>Что умеет</h2><h2 data-es>Qué hace</h2><h2 data-zh>功能</h2>
     <p class="sub" data-en>Everything is drawn by the app itself: dark interface, three colour themes, vertical or horizontal layout.</p>
     <p class="sub" data-ru>Весь интерфейс программа рисует сама: тёмная тема, три цветовые схемы, вертикальная или горизонтальная раскладка.</p>
+    <p class="sub" data-es>Toda la interfaz la dibuja la propia app: tema oscuro, tres temas de color, diseño vertical u horizontal.</p>
+    <p class="sub" data-zh>界面全部由程序自己绘制：深色界面、三种配色主题、纵向或横向布局。</p>
     <div class="grid">
-      <div class="card"><div class="ico">🎓</div><h3 data-en>Coach</h3><h3 data-ru>Тренер</h3>
+      <div class="card"><div class="ico">🎓</div><h3 data-en>Coach</h3><h3 data-ru>Тренер</h3><h3 data-es>Entrenador</h3><h3 data-zh>教练</h3>
         <p data-en>Presses nothing. An overlay above the game shows the combo in orb colours and lights up the keys you've pressed. Drag it anywhere, resize it by the corner or with the mouse wheel.</p>
-        <p data-ru>Ничего не нажимает. Оверлей поверх игры показывает комбинацию в цветах шаров и подсвечивает нажатое. Его можно перетащить и растянуть за уголок или колесом мыши.</p></div>
-      <div class="card"><div class="ico">🎯</div><h3 data-en>Practice without the site</h3><h3 data-ru>Тренировка без сайта</h3>
+        <p data-ru>Ничего не нажимает. Оверлей поверх игры показывает комбинацию в цветах шаров и подсвечивает нажатое. Его можно перетащить и растянуть за уголок или колесом мыши.</p>
+        <p data-es>No pulsa nada. Una superposición sobre el juego muestra la combinación con los colores de los orbes e ilumina las teclas que ya pulsaste. Arrástrala a donde quieras y cambia su tamaño desde la esquina o con la rueda del ratón.</p>
+        <p data-zh>不按任何键。游戏上方的浮窗用元素球的颜色显示组合，并点亮你已按下的键。可以随意拖动，拖动右下角或滚动鼠标滚轮可调整大小。</p></div>
+      <div class="card"><div class="ico">🎯</div><h3 data-en>Practice without the site</h3><h3 data-ru>Тренировка без сайта</h3><h3 data-es>Práctica sin el sitio</h3><h3 data-zh>离线练习</h3>
         <p data-en>The app shows a spell icon, you build the orbs and press R. Every spell is timed. “Only my weak spells” drills your slowest ones.</p>
-        <p data-ru>Программа показывает иконку спелла, ты собираешь шары и жмёшь R. Каждый спелл засекается. «Только мои слабые» гоняет самые медленные.</p></div>
-      <div class="card"><div class="ico">📈</div><h3 data-en>Progress chart</h3><h3 data-ru>График прогресса</h3>
+        <p data-ru>Программа показывает иконку спелла, ты собираешь шары и жмёшь R. Каждый спелл засекается. «Только мои слабые» гоняет самые медленные.</p>
+        <p data-es>La app muestra el icono de un hechizo, juntas los orbes y pulsas R. Cada hechizo se cronometra. «Solo mis hechizos débiles» entrena los más lentos.</p>
+        <p data-zh>程序显示技能图标，你切好元素球后按 R，每个技能都会计时。“只练我的弱项技能”专门练你最慢的技能。</p></div>
+      <div class="card"><div class="ico">📈</div><h3 data-en>Progress chart</h3><h3 data-ru>График прогресса</h3><h3 data-es>Gráfico de progreso</h3><h3 data-zh>进度图表</h3>
         <p data-en>Seconds per spell for every coach and practice run, New and Old separately. Hover a point to see the run.</p>
-        <p data-ru>Секунды на спелл по каждому прогону тренера и тренировки, отдельно New и Old. Наведи на точку, чтобы увидеть прогон.</p></div>
-      <div class="card"><div class="ico">🤖</div><h3 data-en>Bot</h3><h3 data-ru>Бот</h3>
+        <p data-ru>Секунды на спелл по каждому прогону тренера и тренировки, отдельно New и Old. Наведи на точку, чтобы увидеть прогон.</p>
+        <p data-es>Segundos por hechizo en cada partida del entrenador y de la práctica, New y Old por separado. Pasa el ratón sobre un punto para ver la partida.</p>
+        <p data-zh>每次教练和练习的“每个技能用时（秒）”，New 和 Old 分开显示。把鼠标移到点上即可查看那一局。</p></div>
+      <div class="card"><div class="ico">🤖</div><h3 data-en>Bot</h3><h3 data-ru>Бот</h3><h3 data-es>Bot</h3><h3 data-zh>机器人</h3>
         <p data-en>Plays by itself at the speed you set, to show what's possible. For learning only, never for the leaderboard.</p>
-        <p data-ru>Проходит игру сам с заданной скоростью, чтобы показать, что возможно. Только для обучения, не для таблицы рекордов.</p></div>
-      <div class="card"><div class="ico">🔔</div><h3 data-en>Sounds and volume</h3><h3 data-ru>Звуки и громкость</h3>
+        <p data-ru>Проходит игру сам с заданной скоростью, чтобы показать, что возможно. Только для обучения, не для таблицы рекордов.</p>
+        <p data-es>Juega solo a la velocidad que elijas, para mostrar lo que es posible. Solo para aprender, nunca para la clasificación.</p>
+        <p data-zh>按你设定的速度自动通关，展示可以做到多快。仅用于学习，绝不用于排行榜。</p></div>
+      <div class="card"><div class="ico">🔔</div><h3 data-en>Sounds and volume</h3><h3 data-ru>Звуки и громкость</h3><h3 data-es>Sonidos y volumen</h3><h3 data-zh>提示音和音量</h3>
         <p data-en>Five built-in sounds, the Windows sound or your own file, with a volume slider.</p>
-        <p data-ru>Пять встроенных звуков, звук Windows или свой файл, плюс ползунок громкости.</p></div>
-      <div class="card"><div class="ico">⬆️</div><h3 data-en>One-click update</h3><h3 data-ru>Обновление в один клик</h3>
+        <p data-ru>Пять встроенных звуков, звук Windows или свой файл, плюс ползунок громкости.</p>
+        <p data-es>Cinco sonidos incluidos, el sonido de Windows o tu propio archivo, con control de volumen.</p>
+        <p data-zh>五种内置提示音、Windows 系统声音或你自己的文件，并带音量滑块。</p></div>
+      <div class="card"><div class="ico">⬆️</div><h3 data-en>One-click update</h3><h3 data-ru>Обновление в один клик</h3><h3 data-es>Actualización en un clic</h3><h3 data-zh>一键更新</h3>
         <p data-en>When a new version is out, one click downloads it, checks its SHA-256 and restarts the app.</p>
-        <p data-ru>Когда выходит новая версия, один клик скачивает её, проверяет SHA-256 и перезапускает программу.</p></div>
+        <p data-ru>Когда выходит новая версия, один клик скачивает её, проверяет SHA-256 и перезапускает программу.</p>
+        <p data-es>Cuando sale una versión nueva, un clic la descarga, comprueba su SHA-256 y reinicia la app.</p>
+        <p data-zh>有新版本时，点一下即可下载、校验 SHA-256 并重启程序。</p></div>
     </div>
   </section>
 
   <section class="two">
     <div>
-      <h2 data-en>Train like in the game</h2><h2 data-ru>Как в игре</h2>
+      <h2 data-en>Train like in the game</h2><h2 data-ru>Как в игре</h2><h2 data-es>Como en el juego</h2><h2 data-zh>和游戏里一样</h2>
       <ul data-en>
         <li>Spell icons as in the game: Valve's Dota 2 icons for New, invoker-game.com's for Old.</li>
         <li>The hint appears only after 2.5 seconds or a mistake, so you practise remembering.</li>
@@ -162,6 +183,18 @@
         <li>В New порядок шаров не важен, в Old важен — ровно как в игре.</li>
         <li>Время каждого спелла идёт в статистику, поэтому слабые места обновляются по мере роста.</li>
       </ul>
+      <ul data-es>
+        <li>Iconos de hechizos como en el juego: los de Dota 2 de Valve para New y los de invoker-game.com para Old.</li>
+        <li>La pista aparece solo tras 2,5 segundos o un error, así entrenas la memoria.</li>
+        <li>En New el orden de los orbes no importa, en Old sí, igual que en el juego.</li>
+        <li>El tiempo de cada hechizo va a tus estadísticas, así tus puntos débiles se actualizan a medida que mejoras.</li>
+      </ul>
+      <ul data-zh>
+        <li>技能图标与游戏一致：New 使用 Valve 的 Dota 2 图标，Old 使用 invoker-game.com 的图标。</li>
+        <li>只有思考超过 2.5 秒或按错时才出现提示，让你练的是记忆。</li>
+        <li>New 中元素球顺序无关，Old 中顺序重要，与游戏完全一致。</li>
+        <li>每个技能的用时都会计入统计，弱项会随着你的进步而更新。</li>
+      </ul>
     </div>
     <img class="shot" src="img/stats.png" alt="Statistics window with the progress chart">
   </section>
@@ -171,7 +204,7 @@
   </section>
 
   <section>
-    <h2 data-en>Get started</h2><h2 data-ru>Как начать</h2>
+    <h2 data-en>Get started</h2><h2 data-ru>Как начать</h2><h2 data-es>Cómo empezar</h2><h2 data-zh>快速开始</h2>
     <ol class="steps" data-en>
       <li>Download <b>InvokerGameBot-vX.Y.Z.exe</b> from <a href="https://github.com/virtristis/invoker-game-bot/releases/latest">Releases</a> and run it. Settings live in <code>%APPDATA%\InvokerGameBot</code>.</li>
       <li><b>Practice:</b> pick Practice, New or Old, press <kbd>F1</kbd> and then <kbd>Space</kbd>.</li>
@@ -184,28 +217,47 @@
       <li><b>Тренер:</b> выбери «Тренер», нажми <kbd>F1</kbd>, открой invoker-game.com и нажми Start Game. Следуй подсказкам оверлея.</li>
       <li>Через несколько прогонов открой <b>Статистику</b>: найди медленные спеллы и включи «Только мои слабые спеллы».</li>
     </ol>
+    <ol class="steps" data-es>
+      <li>Descarga <b>InvokerGameBot-vX.Y.Z.exe</b> desde <a href="https://github.com/virtristis/invoker-game-bot/releases/latest">Releases</a> y ejecútalo. La configuración se guarda en <code>%APPDATA%\InvokerGameBot</code>.</li>
+      <li><b>Práctica:</b> elige «Práctica», New u Old, pulsa <kbd>F1</kbd> y luego <kbd>Espacio</kbd>.</li>
+      <li><b>Entrenador:</b> elige «Entrenador», pulsa <kbd>F1</kbd>, abre invoker-game.com y pulsa Start Game. Sigue la superposición.</li>
+      <li>Tras unas partidas abre <b>Estadísticas</b>: busca tus hechizos más lentos y activa «Solo mis hechizos débiles».</li>
+    </ol>
+    <ol class="steps" data-zh>
+      <li>从 <a href="https://github.com/virtristis/invoker-game-bot/releases/latest">Releases</a> 下载 <b>InvokerGameBot-vX.Y.Z.exe</b> 并运行。设置保存在 <code>%APPDATA%\InvokerGameBot</code>。</li>
+      <li><b>练习：</b>选择“练习”和 New 或 Old，按 <kbd>F1</kbd>，再按 <kbd>空格</kbd>。</li>
+      <li><b>教练：</b>选择“教练”，按 <kbd>F1</kbd>，打开 invoker-game.com 并点击 Start Game，跟着浮窗提示操作。</li>
+      <li>玩几局后打开<b>统计</b>：找到最慢的技能，开启“只练我的弱项技能”。</li>
+    </ol>
   </section>
 
   <footer>
     <p data-en>Made by <a href="https://github.com/virtristis">virtristis</a> · MIT License · <a href="https://github.com/virtristis/invoker-game-bot/blob/main/CHANGELOG.md">Changelog</a></p>
     <p data-ru>Сделал <a href="https://github.com/virtristis">virtristis</a> · лицензия MIT · <a href="https://github.com/virtristis/invoker-game-bot/blob/main/CHANGELOG.md">Изменения</a></p>
+    <p data-es>Hecho por <a href="https://github.com/virtristis">virtristis</a> · Licencia MIT · <a href="https://github.com/virtristis/invoker-game-bot/blob/main/CHANGELOG.md">Cambios</a></p>
+    <p data-zh>作者 <a href="https://github.com/virtristis">virtristis</a> · MIT 许可证 · <a href="https://github.com/virtristis/invoker-game-bot/blob/main/CHANGELOG.md">更新日志</a></p>
     <p data-en>Not affiliated with invoker-game.com, its author, or Valve. Dota 2 and Invoker are trademarks of Valve Corporation.</p>
     <p data-ru>Проект не связан с invoker-game.com, его автором или Valve. Dota 2 и Invoker — товарные знаки Valve Corporation.</p>
+    <p data-es>Sin relación con invoker-game.com, su autor ni Valve. Dota 2 e Invoker son marcas comerciales de Valve Corporation.</p>
+    <p data-zh>本项目与 invoker-game.com、其作者及 Valve 无关。Dota 2 和 Invoker 是 Valve Corporation 的商标。</p>
   </footer>
 </div>
 <script>
   (function () {
+    var langs = ['en', 'ru', 'es', 'zh'];
+    var buttons = document.querySelectorAll('.lang button');
     var pick = function (lang) {
+      if (langs.indexOf(lang) < 0) lang = 'en';
       document.documentElement.lang = lang;
-      document.getElementById('en').classList.toggle('on', lang === 'en');
-      document.getElementById('ru').classList.toggle('on', lang === 'ru');
+      for (var i = 0; i < buttons.length; i++)
+        buttons[i].classList.toggle('on', buttons[i].getAttribute('data-lang') === lang);
       try { localStorage.setItem('lang', lang); } catch (e) {}
     };
     var saved = null;
     try { saved = localStorage.getItem('lang'); } catch (e) {}
-    pick(saved || ((navigator.language || '').slice(0, 2) === 'ru' ? 'ru' : 'en'));
-    document.getElementById('en').onclick = function () { pick('en'); };
-    document.getElementById('ru').onclick = function () { pick('ru'); };
+    pick(saved || (navigator.language || '').slice(0, 2).toLowerCase());
+    for (var i = 0; i < buttons.length; i++)
+      buttons[i].onclick = function () { pick(this.getAttribute('data-lang')); };
   })();
 </script>
 </body>
