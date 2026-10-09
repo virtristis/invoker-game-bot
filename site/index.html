@@ -26,7 +26,10 @@
   }
   a { color: var(--accent2); }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-  nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; gap: 12px; flex-wrap: wrap; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; margin: 0 -20px; gap: 12px; flex-wrap: wrap;
+        position: sticky; top: 0; z-index: 20; background: rgba(15, 17, 23, .72); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid transparent; transition: border-color .2s; }
+  nav.scrolled { border-bottom-color: #262a38; }
   nav .brand { font: 700 18px Georgia, serif; letter-spacing: .5px; color: var(--gold1); text-decoration: none; }
   nav .links { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .lang { display: inline-flex; gap: 4px; }
@@ -73,7 +76,19 @@
   .gifs { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
   .gifs figure { margin: 0; }
   .gifs figcaption { color: var(--muted); font-size: 14px; text-align: center; margin-top: 10px; }
-  .card { background: var(--card); border: 1px solid #262a38; border-radius: 16px; padding: 20px; }
+  .card { background: var(--card); border: 1px solid #262a38; border-radius: 16px; padding: 20px; transition: transform .2s, border-color .2s, box-shadow .2s; }
+  .card:hover { transform: translateY(-4px); border-color: #8b5cf680; box-shadow: 0 14px 34px #0007, 0 0 26px #8b5cf62e; }
+  .hero-art { display: block; width: 100%; max-width: 995px; margin: 0 auto 6px; height: auto; border-radius: 18px;
+              -webkit-mask-image: radial-gradient(ellipse 72% 90% at 56% 50%, #000 55%, transparent 100%);
+              mask-image: radial-gradient(ellipse 72% 90% at 56% 50%, #000 55%, transparent 100%); }
+  .shot { cursor: zoom-in; }
+  .lightbox { position: fixed; inset: 0; z-index: 50; background: rgba(5, 6, 10, .88); display: none; align-items: center; justify-content: center; padding: 24px; cursor: zoom-out; }
+  .lightbox.on { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 100%; border-radius: 14px; box-shadow: 0 30px 80px #000; }
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  .btn .ver { font-weight: 400; opacity: .85; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } .card, .btn { transition: none; } }
   .card h3 { margin: 6px 0 6px; font-size: 18px; }
   .card p { margin: 0; color: #c3c7d4; font-size: 15px; }
   .ico { font-size: 22px; }
@@ -110,7 +125,7 @@
   </nav>
 
   <header class="hero">
-    <div class="orbs"><span style="--c: var(--quas)"></span><span style="--c: var(--wex)"></span><span style="--c: var(--exort)"></span></div>
+    <img class="hero-art" src="img/header.png?v=1.8.4" width="995" height="184" alt="Invoker with the Quas and Exort orbs">
     <h1>INVOKER BOT</h1>
     <div class="tagline">Bot · Coach · Practice</div>
     <p class="lead" data-en>An AutoHotkey v2 coach for <a href="https://invoker-game.com/">invoker-game.com</a>. Live combo hints while you play, timed practice with spell icons, and a progress chart that shows you getting faster. New (10 spells) and Old (27 spells) Invoker.</p>
@@ -118,7 +133,7 @@
     <p class="lead" data-es>Un entrenador en AutoHotkey v2 para <a href="https://invoker-game.com/">invoker-game.com</a>: pistas de combinaciones mientras juegas, práctica cronometrada con iconos de hechizos y un gráfico que muestra cómo te vuelves más rápido. Invoker New (10 hechizos) y Old (27 hechizos).</p>
     <p class="lead" data-zh>基于 AutoHotkey v2 的 <a href="https://invoker-game.com/">invoker-game.com</a> 教练：游戏时实时提示组合，带技能图标的计时练习，以及展示你越来越快的进度图表。支持 New（10 个技能）和 Old（27 个技能）卡尔。</p>
     <div class="cta">
-      <a class="btn go" href="https://github.com/virtristis/invoker-game-bot/releases/latest"><span data-en>⬇ Download for Windows</span><span data-ru>⬇ Скачать для Windows</span><span data-es>⬇ Descargar para Windows</span><span data-zh>⬇ 下载 Windows 版</span></a>
+      <a class="btn go" id="dl" href="https://github.com/virtristis/invoker-game-bot/releases/latest"><span data-en>⬇ Download for Windows</span><span data-ru>⬇ Скачать для Windows</span><span data-es>⬇ Descargar para Windows</span><span data-zh>⬇ 下载 Windows 版</span><span class="ver"></span></a>
       <a class="btn ghost" href="https://github.com/virtristis/invoker-game-bot"><span data-en>Source on GitHub</span><span data-ru>Исходник на GitHub</span><span data-es>Código en GitHub</span><span data-zh>GitHub 源代码</span></a>
     </div>
     <div class="meta" data-en>Windows 10 / 11 · no install, no AutoHotkey needed · EN · RU · ES · 中文 · MIT</div>
@@ -325,7 +340,38 @@
     <p data-zh>本项目与 invoker-game.com、其作者及 Valve 无关。Dota 2 和 Invoker 是 Valve Corporation 的商标。</p>
   </footer>
 </div>
+<div class="lightbox" id="lb"><img alt=""></div>
 <script>
+  (function () {
+    // sticky nav: a line under it once the page is scrolled
+    var nav = document.querySelector("nav");
+    var onScroll = function () { nav.classList.toggle("scrolled", window.scrollY > 8); };
+    window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+    // sections fade in when they come into view (without JS everything stays visible)
+    if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+      }, { rootMargin: "0px 0px -8% 0px" });
+      document.querySelectorAll("section").forEach(function (s) { s.classList.add("reveal"); io.observe(s); });
+    }
+    // click an image to see it large; click or Esc to close
+    var lb = document.getElementById("lb"), lbImg = lb.querySelector("img");
+    document.querySelectorAll("img.shot").forEach(function (im) {
+      im.addEventListener("click", function () { lbImg.src = im.src; lbImg.alt = im.alt; lb.classList.add("on"); });
+    });
+    lb.addEventListener("click", function () { lb.classList.remove("on"); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") lb.classList.remove("on"); });
+    // the download button: version and size of the latest release, straight link to the .exe
+    fetch("https://api.github.com/repos/virtristis/invoker-game-bot/releases/latest")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (rel) {
+        if (!rel) return;
+        var exe = (rel.assets || []).filter(function (a) { return /\.exe$/i.test(a.name); })[0];
+        if (!exe) return;
+        document.getElementById("dl").href = exe.browser_download_url;
+        document.querySelector("#dl .ver").textContent = " · " + rel.tag_name + " · " + (exe.size / 1048576).toFixed(1) + " MB";
+      }).catch(function () {});
+  })();
   (function () {
     var langs = ['en', 'ru', 'es', 'zh'];
     var buttons = document.querySelectorAll('.lang button');

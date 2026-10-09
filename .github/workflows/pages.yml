@@ -29,7 +29,7 @@ jobs:
           mkdir -p _site/img
           cp site/* _site/
           cp docs/banner.png docs/practice.png docs/stats.png docs/social-preview.png docs/practice-run.gif docs/intro.gif docs/exit.gif docs/speedrun.gif _site/img/
-          cp assets/icon.ico _site/img/
+          cp assets/icon.ico assets/header.png _site/img/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

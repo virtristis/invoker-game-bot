@@ -1,6 +1,14 @@
+<div align="center">
+
+<img src="docs/logo.png" width="96" alt="">
+
 # Invoker Game Bot
 
+[![Release](https://img.shields.io/github/v/release/virtristis/invoker-game-bot?style=flat-square&color=8b5cf6&label=release)](https://github.com/virtristis/invoker-game-bot/releases/latest) [![Downloads](https://img.shields.io/github/downloads/virtristis/invoker-game-bot/total?style=flat-square&color=f59e0b)](https://github.com/virtristis/invoker-game-bot/releases) [![Tests](https://img.shields.io/github/actions/workflow/status/virtristis/invoker-game-bot/tests.yml?branch=main&style=flat-square&label=tests)](https://github.com/virtristis/invoker-game-bot/actions/workflows/tests.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-3b82f6?style=flat-square)](LICENSE) [![Website](https://img.shields.io/badge/website-online-22c55e?style=flat-square)](https://virtristis.github.io/invoker-game-bot/)
+
 [English](README.md) · [Русский](README.ru.md) · [Español](README.es.md) · **中文** · 🌐 [网站](https://virtristis.github.io/invoker-game-bot/)
+
+</div>
 
 一个基于 AutoHotkey v2 的 [invoker-game.com](https://invoker-game.com/) 卡尔练习器机器人和**教练**。它可以按照你设定的速度自动完成游戏，也可以不按任何键，只在你自己玩的时候提示正确的组合。支持 **New**（10 个技能）和 **Old**（27 个技能）两种模式。
 

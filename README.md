@@ -1,6 +1,14 @@
+<div align="center">
+
+<img src="docs/logo.png" width="96" alt="">
+
 # Invoker Game Bot
 
+[![Release](https://img.shields.io/github/v/release/virtristis/invoker-game-bot?style=flat-square&color=8b5cf6&label=release)](https://github.com/virtristis/invoker-game-bot/releases/latest) [![Downloads](https://img.shields.io/github/downloads/virtristis/invoker-game-bot/total?style=flat-square&color=f59e0b)](https://github.com/virtristis/invoker-game-bot/releases) [![Tests](https://img.shields.io/github/actions/workflow/status/virtristis/invoker-game-bot/tests.yml?branch=main&style=flat-square&label=tests)](https://github.com/virtristis/invoker-game-bot/actions/workflows/tests.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-3b82f6?style=flat-square)](LICENSE) [![Website](https://img.shields.io/badge/website-online-22c55e?style=flat-square)](https://virtristis.github.io/invoker-game-bot/)
+
 **English** · [Русский](README.ru.md) · [Español](README.es.md) · [中文](README.zh.md) · 🌐 [Website](https://virtristis.github.io/invoker-game-bot/)
+
+</div>
 
 An AutoHotkey v2 bot and **coach** for the [invoker-game.com](https://invoker-game.com/) trainer. It can play by itself at a speed you control, or stay hands-off and show you the right combo while you play. Supports both **New** (10 spells) and **Old** (27 spells) Invoker.
 
