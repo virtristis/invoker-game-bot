@@ -5,6 +5,7 @@ All notable changes to this project are documented here.
 ## [Unreleased]
 
 ### Added
+- **Invoker in the header of the horizontal layout**: the portrait from the intro, drawn in dots in the colour of the theme, fills the empty middle of the header.
 - **The website in Español and 中文**, next to English and Русский.
 - **A GIF of a full practice run** in the README and on the website. It is made by the app itself: `--selftest drill-gif` plays a practice run on a virtual clock and saves the frames, `tools/make-gif.ps1` (with `tools/GifWriter.cs`) turns them into a small GIF.
 

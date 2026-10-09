@@ -68,6 +68,47 @@ InvokerArt() {
 )"
 }
 
+; середина портрета из заставки (лицо) точками в цвете темы, к краям мягко гаснет.
+; Рисуется один раз на тему в прозрачную картинку: шапка перерисовывается при каждом наведении
+InvokerDots() {
+    static cache := Map()
+    key := Theme "|" DPI
+    if cache.Has(key)
+        return cache[key]
+    static Bits := [[0, 0, 1], [0, 1, 2], [0, 2, 4], [1, 0, 8], [1, 1, 16], [1, 2, 32], [0, 3, 64], [1, 3, 128]]
+    pitch := 1.55, c0 := 36, c1 := 156, r0 := 16, r1 := 72   ; кусок арта с лицом, в точках (весь арт — 192×96)
+    w := Round((c1 - c0) * pitch), h := Round((r1 - r0) * pitch)
+    cv := CvNew(w, h, "000000")
+    DllCall("gdiplus\GdipGraphicsClear", "ptr", cv.g, "uint", 0)
+    brushes := []                                       ; 8 уровней прозрачности
+    loop 8
+        brushes.Push(Solid(C.accent2, A_Index * 30))
+    for row, line in StrSplit(InvokerArt(), "`n", "`r") {
+        loop parse line {
+            v := Ord(A_LoopField) - 0x2800, col := A_Index
+            if (v <= 0)
+                continue
+            for b in Bits {
+                if !(v & b[3])
+                    continue
+                px := (col - 1) * 2 + b[1], py := (row - 1) * 4 + b[2]
+                if (px < c0 || px >= c1 || py < r0 || py >= r1)
+                    continue
+                x := (px - c0) * pitch, y := (py - r0) * pitch
+                d := Sqrt(((x - w / 2) / (w / 2)) ** 2 + ((y - h / 2) / (h / 2)) ** 2)
+                lvl := Round(Min(1, Max(0, (1 - d) * 2.4)) * 8)
+                if lvl
+                    DllCall("gdiplus\GdipFillEllipse", "ptr", cv.g, "ptr", brushes[lvl],
+                        "float", x, "float", y, "float", pitch * 0.9, "float", pitch * 0.9)
+            }
+        }
+    }
+    for br in brushes
+        DllCall("gdiplus\GdipDeleteBrush", "ptr", br)
+    DllCall("gdiplus\GdipDeleteGraphics", "ptr", cv.g)
+    return cache[key] := {bmp: cv.bmp, w: w, h: h}
+}
+
 ; «консоль», в которой точками прорисовывается Инвокер; клик или Esc — пропустить
 ShowSplash(shotFile := "") {
     global SplashSkip := false
@@ -191,8 +232,12 @@ RenderHeader() {
     DllCall("gdiplus\GdipDeleteBrush", "ptr", br)
     Glow(cv, 40, 0, 150, C.accent, 120)
     Glow(cv, 330 + R, 18, 110, C.glow2, 60)
-    if Horiz
+    if Horiz {
         Glow(cv, HW / 2, 10, 160, C.accent, 50)
+        dots := InvokerDots()                           ; Инвокер из заставки — в свободной середине шапки
+        DllCall("gdiplus\GdipDrawImageRect", "ptr", cv.g, "ptr", dots.bmp, "float", 410 - dots.w / 2,
+            "float", 46 - dots.h / 2, "float", dots.w, "float", dots.h)
+    }
 
     hv := Hover.hwnd = hdr.Hwnd ? Hover.part : ""      ; что в шапке под мышкой
     ; языки
