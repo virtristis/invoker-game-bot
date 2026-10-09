@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/logo.png" width="96" alt="">
+<img src="docs/app-icon.png" width="96" alt="">
 
 # Invoker Game Bot
 
