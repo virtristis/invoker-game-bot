@@ -9,7 +9,7 @@ Un bot y **entrenador** en AutoHotkey v2 para el entrenador [invoker-game.com](h
 
 ## 💡 Cómo empezó
 
-Empezó con un bot. Quería ver si un programa podía jugar solo en [invoker-game.com](https://invoker-game.com/), así que escribí uno que lee la página e invoca cada hechizo. Cuando funcionó, me di cuenta de que lo más útil era ayudar a la gente a aprender las combinaciones por sí misma, así que construí mi propio entrenador dentro del bot: el **entrenador** con una superposición que ilumina tus pulsaciones y la **práctica** dentro de la app, con iconos de hechizos, cronómetro y un gráfico de progreso.
+Empezó con un bot. Quería ver si un programa podía jugar solo en [invoker-game.com](https://invoker-game.com/), así que escribí uno que lee la página e invoca cada hechizo. Cuando funcionó, me di cuenta de que lo más útil era ayudar a la gente a aprender las combinaciones por sí misma, así que construí mi propio entrenador dentro del bot: el **entrenador** con una superposición que ilumina tus pulsaciones y la **práctica** dentro de la app, con iconos de hechizos, cronómetro y un gráfico de progreso. La idea es sencilla: pulsar exactamente las teclas correctas, sin errores, hasta que las combinaciones te salgan solas.
 
 > [!IMPORTANT]
 > **Es un proyecto educativo.** Muestra cómo un programa de escritorio puede leer una página web mediante Windows UI Automation y ayuda a aprender los combos de Invoker. **No** está pensado para batir récords, subir en las clasificaciones ni hacer pasar los resultados del bot como habilidad propia.

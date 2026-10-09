@@ -9,7 +9,7 @@ An AutoHotkey v2 bot and **coach** for the [invoker-game.com](https://invoker-ga
 
 ## 💡 How it started
 
-It started with a bot. I wanted to see if a program could play [invoker-game.com](https://invoker-game.com/) by itself, so I wrote one that reads the page and casts every spell. Once it worked, I realised the more useful part was helping people learn the combos themselves, so I built my own trainer inside the bot: the **coach** overlay that lights up your key presses, and **practice** right in the app, with spell icons, timing and a progress chart.
+It started with a bot. I wanted to see if a program could play [invoker-game.com](https://invoker-game.com/) by itself, so I wrote one that reads the page and casts every spell. Once it worked, I realised the more useful part was helping people learn the combos themselves, so I built my own trainer inside the bot: the **coach** overlay that lights up your key presses, and **practice** right in the app, with spell icons, timing and a progress chart. The goal is simple: to press exactly the right keys, without mistakes, until the combos are in your fingers.
 
 > [!IMPORTANT]
 > **This is an educational project.** It was made to show how desktop automation can read a web page through Windows UI Automation, and to help people learn Invoker combos. It is **not** meant for setting records, climbing leaderboards or passing off bot results as your own skill.
