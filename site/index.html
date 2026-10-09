@@ -47,7 +47,17 @@
   .btn.ghost { background: var(--card); color: var(--text); border: 1px solid #2c3040; }
   .small { padding: 6px 12px; font-size: 14px; border-radius: 9px; }
 
-  header.hero { text-align: center; padding: 48px 0 24px; }
+  html, body { overflow-x: clip; }
+  header.hero { --bgh: calc(min(100vw, 1600px) * 0.6667); position: relative; text-align: center;
+                padding: calc(var(--bgh) * 0.47) 0 24px; }
+  header.hero > *:not(.hero-bg) { position: relative; z-index: 1; }
+  .hero-bg { position: absolute; z-index: 0; top: -64px; left: 50%; transform: translateX(-50%);
+             width: min(100vw, 1600px); height: var(--bgh);
+             background: url(img/hero.jpg?v=1.8.4) center top / cover no-repeat;
+             -webkit-mask-image: radial-gradient(ellipse 62% 78% at 50% 34%, #000 58%, transparent 100%);
+             mask-image: radial-gradient(ellipse 62% 78% at 50% 34%, #000 58%, transparent 100%); }
+  @media (max-width: 760px) { header.hero { --bgh: calc(100vw * 0.95); padding-top: calc(var(--bgh) * 0.5); }
+                              .hero-bg { width: 142vw; } }
   .orbs { display: flex; justify-content: center; gap: 18px; margin-bottom: 18px; }
   .orbs span {
     width: 34px; height: 34px; border-radius: 50%;
@@ -125,7 +135,7 @@
   </nav>
 
   <header class="hero">
-    <img class="hero-art" src="img/header.png?v=1.8.4" width="995" height="184" alt="Invoker with the Quas and Exort orbs">
+    <div class="hero-bg" role="img" aria-label="Invoker with the Quas, Wex and Exort orbs"></div>
     <h1>INVOKER BOT</h1>
     <div class="tagline">Bot · Coach · Practice</div>
     <p class="lead" data-en>An AutoHotkey v2 coach for <a href="https://invoker-game.com/">invoker-game.com</a>. Live combo hints while you play, timed practice with spell icons, and a progress chart that shows you getting faster. New (10 spells) and Old (27 spells) Invoker.</p>
