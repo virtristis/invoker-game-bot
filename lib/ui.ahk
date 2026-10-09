@@ -68,47 +68,22 @@ InvokerArt() {
 )"
 }
 
-; середина портрета из заставки (лицо) точками в цвете темы, к краям мягко гаснет.
-; Рисуется один раз на тему в прозрачную картинку: шапка перерисовывается при каждом наведении
-InvokerDots() {
-    static cache := Map()
-    key := Theme "|" DPI
-    if cache.Has(key)
-        return cache[key]
-    static Bits := [[0, 0, 1], [0, 1, 2], [0, 2, 4], [1, 0, 8], [1, 1, 16], [1, 2, 32], [0, 3, 64], [1, 3, 128]]
-    pitch := 1.55, c0 := 36, c1 := 156, r0 := 16, r1 := 72   ; кусок арта с лицом, в точках (весь арт — 192×96)
-    w := Round((c1 - c0) * pitch), h := Round((r1 - r0) * pitch)
-    cv := CvNew(w, h, "000000")
-    DllCall("gdiplus\GdipGraphicsClear", "ptr", cv.g, "uint", 0)
-    brushes := []                                       ; 8 уровней прозрачности
-    loop 8
-        brushes.Push(Solid(C.accent2, A_Index * 30))
-    for row, line in StrSplit(InvokerArt(), "`n", "`r") {
-        loop parse line {
-            v := Ord(A_LoopField) - 0x2800, col := A_Index
-            if (v <= 0)
-                continue
-            for b in Bits {
-                if !(v & b[3])
-                    continue
-                px := (col - 1) * 2 + b[1], py := (row - 1) * 4 + b[2]
-                if (px < c0 || px >= c1 || py < r0 || py >= r1)
-                    continue
-                x := (px - c0) * pitch, y := (py - r0) * pitch
-                d := Sqrt(((x - w / 2) / (w / 2)) ** 2 + ((y - h / 2) / (h / 2)) ** 2)
-                lvl := Round(Min(1, Max(0, (1 - d) * 2.4)) * 8)
-                if lvl
-                    DllCall("gdiplus\GdipFillEllipse", "ptr", cv.g, "ptr", brushes[lvl],
-                        "float", x, "float", y, "float", pitch * 0.9, "float", pitch * 0.9)
+; Инвокер для шапки горизонтальной раскладки: assets\header.png (в 2× размере, края уже
+; прозрачные). В exe картинка вшита и при запуске распаковывается к иконкам спеллов
+HeaderArt() {
+    static bmp := -1
+    if (bmp = -1) {
+        file := A_ScriptDir "\assets\header.png"
+        if A_IsCompiled {
+            file := IconDir "\header.png"
+            try {                                       ; Ahk2Exe вшивает файл, только если строка начинается с FileInstall
+                FileInstall "assets\header.png", file, 1
             }
         }
+        bmp := FileExist(file) && FileGetSize(file) > 0 ? WicLoad(file) : 0
     }
-    for br in brushes
-        DllCall("gdiplus\GdipDeleteBrush", "ptr", br)
-    DllCall("gdiplus\GdipDeleteGraphics", "ptr", cv.g)
-    return cache[key] := {bmp: cv.bmp, w: w, h: h}
+    return bmp
 }
-
 ; «консоль», в которой точками прорисовывается Инвокер; клик или Esc — пропустить
 ShowSplash(shotFile := "") {
     global SplashSkip := false
@@ -232,11 +207,19 @@ RenderHeader() {
     DllCall("gdiplus\GdipDeleteBrush", "ptr", br)
     Glow(cv, 40, 0, 150, C.accent, 120)
     Glow(cv, 330 + R, 18, 110, C.glow2, 60)
-    if Horiz {
+    if Horiz
         Glow(cv, HW / 2, 10, 160, C.accent, 50)
-        dots := InvokerDots()                           ; Инвокер из заставки — в свободной середине шапки
-        DllCall("gdiplus\GdipDrawImageRect", "ptr", cv.g, "ptr", dots.bmp, "float", 410 - dots.w / 2,
-            "float", 46 - dots.h / 2, "float", dots.w, "float", dots.h)
+    ; Инвокер: в горизонтальной раскладке — посередине шапки, в вертикальной — справа,
+    ; вместо нарисованных шаров (лицо на картинке — на x≈279 из 497.5)
+    if (art := HeaderArt()) {
+        DllCall("gdiplus\GdipSetInterpolationMode", "ptr", cv.g, "int", 7)
+        DllCall("gdiplus\GdipDrawImageRect", "ptr", cv.g, "ptr", art, "float", Horiz ? 131 : 26, "float", 0,
+            "float", 497.5, "float", 92)
+        if !Horiz {                                     ; заголовок поверх картинки должен читаться
+            br := Linear(120, 0, 262, 0, C.head, C.head, 215, 0)
+            DllCall("gdiplus\GdipFillRectangle", "ptr", cv.g, "ptr", br, "float", 120, "float", 0, "float", 142, "float", 92)
+            DllCall("gdiplus\GdipDeleteBrush", "ptr", br)
+        }
     }
 
     hv := Hover.hwnd = hdr.Hwnd ? Hover.part : ""      ; что в шапке под мышкой
@@ -258,6 +241,8 @@ RenderHeader() {
     ; раскладка / свернуть / закрыть (закрыть при наведении — красная, как в Windows)
     for i, spot in ["layout", "min", "close"] {
         x := 220 + R + i * 34
+        if (art && !Horiz)                              ; под кнопками — Инвокер: тёмная подложка
+            RRect(cv, x, 6, 28, 26, 7, Solid(C.head, 190))
         if (hv = spot)
             RRect(cv, x, 6, 28, 26, 7, spot = "close" ? Solid("E81123") : Solid("FFFFFF", 40))
         else
@@ -273,8 +258,8 @@ RenderHeader() {
     else
         Txt(cv, T("subtitle"), 19, 67, 240, 18, "Segoe UI", 11.5, 0, C.muted, 0)
 
-    ; Quas / Wex / Exort
-    for i, col in ["38BDF8", "C084FC", "FB923C"] {
+    ; Quas / Wex / Exort (в вертикальной раскладке с картинкой их место занимает Инвокер)
+    for i, col in (Horiz || !art ? ["38BDF8", "C084FC", "FB923C"] : []) {
         cx := 266 + R + (i - 1) * 30
         Glow(cv, cx, 56, 26, col, 150)
         Orb(cv, cx, 56, 11, col)
