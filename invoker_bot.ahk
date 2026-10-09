@@ -357,6 +357,34 @@ if SelfTest {
         DoUpdate()
         ExitApp 1
     }
+    if InStr(SelfArg, "intro-gif") {                     ; кадры заставки для GIF + главное окно для перехода
+        dir := A_Temp "\igb-shots\intro-gif"
+        try DirDelete dir, true
+        DirCreate dir
+        Sleep 800
+        SaveWindowShot(G, dir "\main.png")
+        G.Hide()
+        ShowSplash("", dir)
+        ExitApp
+    }
+    if InStr(SelfArg, "close-gif") {                     ; кадры выхода (Sun Strike) для GIF
+        dir := A_Temp "\igb-shots\close-gif"
+        try DirDelete dir, true
+        DirCreate dir
+        Sleep 1000
+        SaveWindowShot(G, dir "\f0001.png"), delays := "700`n"
+        Hover := {hwnd: hdr.Hwnd, part: "close"}           ; мышь на крестике
+        RenderHeader()
+        Sleep 200
+        snap := WindowBitmap(G)
+        CvSave({bmp: WindowBitmap(G), g: 0}, dir "\f0002.png"), delays .= "500`n"
+        loop 28 {
+            SunStrikeFrame(snap, A_Index / 28, 0, dir "\f" Format("{:04}", A_Index + 2) ".png", "141022")
+            delays .= (A_Index = 28 ? 900 : 30) "`n"
+        }
+        FileAppend delays, dir "\delays.txt"
+        ExitApp
+    }
     if InStr(SelfArg, "shot-close") {                    ; кадры Sun Strike при выходе, потом настоящий выход
         try DirCreate A_Temp "\igb-shots"
         Sleep 1000

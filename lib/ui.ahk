@@ -85,8 +85,19 @@ HeaderArt() {
     return bmp
 }
 ; «консоль», в которой точками прорисовывается Инвокер; клик или Esc — пропустить
-ShowSplash(shotFile := "") {
+ShowSplash(shotFile := "", recDir := "") {
     global SplashSkip := false
+    ; recDir — запись кадров для GIF: вместо ожидания сохраняем кадр, задержки — в delays.txt
+    rec := {t: 0, next: 0, starts: []}
+    Pause(ms) {
+        if (recDir = "")
+            return Sleep(ms)
+        if (rec.t >= rec.next) {                       ; кадры не чаще чем раз в 40 мс
+            SaveWindowShot(S, recDir "\f" Format("{:04}", rec.starts.Length + 1) ".png")
+            rec.starts.Push(rec.t), rec.next := rec.t + 40
+        }
+        rec.t += ms
+    }
     lines := StrSplit(InvokerArt(), "`n", "`r")
     rows := lines.Length, cols := StrLen(lines[1])
     bg := "0A0A12"
@@ -135,7 +146,7 @@ ShowSplash(shotFile := "") {
             }
         }
         step += 2
-        Sleep 16
+        Pause(16)
     }
     for i, ctl in rowCtl
         ctl.Text := lines[i]
@@ -155,26 +166,34 @@ ShowSplash(shotFile := "") {
         loop StrLen(txt) {
             m[1].Text := SubStr(txt, 1, A_Index) "▌"
             if Mod(A_Index, 2) = 0
-                Sleep 8
+                Pause(8)
         }
         m[1].Text := txt
-        Sleep 60
+        Pause(60)
     }
 
     ; 3) шары загораются по очереди, потом вспышка INVOKE!
     if !SplashSkip {
         loop 3 {
             SplashOrbs(orbPic, A_Index)
-            Sleep 170
+            Pause(170)
         }
         for fl in [0.4, 0.8, 1, 0.75, 0.55]
-            SplashOrbs(orbPic, 3, fl), Sleep(40)
-        Sleep 600
+            SplashOrbs(orbPic, 3, fl), Pause(40)
+        Pause(recDir != "" ? 1000 : 600)
     } else
         SplashOrbs(orbPic, 3, 0.55)
 
     if (shotFile != "")                             ; автотест: снимок заставки
         SaveWindowShot(S, shotFile)
+    if (recDir != "") {                                 ; длительность каждого кадра
+        Pause(0), rec.starts.Push(rec.t + 900)            ; последний кадр держим подольше
+        out := ""
+        loop rec.starts.Length - 1
+            out .= rec.starts[A_Index + 1] - rec.starts[A_Index] "`n"
+        try FileDelete recDir "\delays.txt"
+        FileAppend out, recDir "\delays.txt"
+    }
     ; 4) заставка «втягивается» в главное окно: сжимается к его месту и гаснет
     WinGetPos &sx, &sy, &sw, &sh, S
     tw := Round(HW * DPI), th := Round(GH * DPI)
@@ -226,7 +245,7 @@ SunStrikeExit(*) {
 }
 
 ; кадр Sun Strike в момент ph (0…1) поверх снимка окна snap: в картинку pic или в файл
-SunStrikeFrame(snap, ph, pic := 0, outFile := "") {
+SunStrikeFrame(snap, ph, pic := 0, outFile := "", fadeBg := "") {
     W := HW, H := GH, cx := W / 2, cy := H * 0.5
     cv := CvNew(W, H, C.bg)
     DllCall("gdiplus\GdipDrawImageRect", "ptr", cv.g, "ptr", snap, "float", 0, "float", 0, "float", W, "float", H)
@@ -274,6 +293,8 @@ SunStrikeFrame(snap, ph, pic := 0, outFile := "") {
             Circle(cv, x, y, 0.8 + Mod(n, 3) * 0.5, Solid("FFF7D6", a))
         }
     }
+    if (fadeBg != "" && ph > 0.6)                     ; для GIF: окно гаснет до фона страницы
+        FillAll(cv, W, H, Solid(fadeBg, Round(255 * Min(1, (ph - 0.6) / 0.4))))
     if (outFile != "")
         CvSave(cv, outFile)
     else

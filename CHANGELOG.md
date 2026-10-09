@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## [Unreleased]
+
+### Added
+- **GIFs of the intro and of the Sun Strike exit** in the README and on the website, made by the app itself (`--selftest intro-gif`, `--selftest close-gif`).
+- The website: two new cards (intro, Sun Strike) in an even 4 × 2 grid, and a section with both GIFs.
+
 ## [1.8.3] - 2026-10-09
 
 ### Added

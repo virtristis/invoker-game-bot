@@ -48,11 +48,14 @@
 
 </details>
 
-<details><summary>Заставка при запуске</summary>
+## ✨ Запуск и выход
 
-![Заставка](docs/intro.png)
-
-</details>
+<table>
+<tr>
+<td align="center" width="50%"><img src="docs/intro.gif" alt="Заставка"><br><sub>Запуск: портрет точками Брайля, Quas · Wex · Exort, INVOKE!</sub></td>
+<td align="center" width="50%"><img src="docs/exit.gif" alt="Выход"><br><sub>Выход: Sun Strike сжигает окно</sub></td>
+</tr>
+</table>
 
 ## 🎓 Режим тренера: научиться играть на Инвокере
 

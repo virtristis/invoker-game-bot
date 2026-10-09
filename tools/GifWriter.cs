@@ -67,7 +67,10 @@ public static class GifWriter
 
     static int Key(int argb) { return ((argb >> 2) & 63) | (((argb >> 10) & 63) << 6) | (((argb >> 18) & 63) << 12); }
 
-    public static string Write(string[] files, string outFile, int delayCs)
+    public static string Write(string[] files, string outFile, int delayCs) { return Write(files, outFile, new int[] { delayCs }); }
+
+    // delaysCs: per-frame delays in 1/100 s (the last value repeats for the remaining frames)
+    public static string Write(string[] files, string outFile, int[] delaysCs)
     {
         var frames = new List<int[]>();
         int W = 0, H = 0;
@@ -106,8 +109,10 @@ public static class GifWriter
             w.Write(new byte[] { 3, 1, 0, 0, 0 });                     // loop forever
             byte[] prev = null;
             long bytesIdx = 0;
+            int fi = 0;
             foreach (var px in frames)
             {
+                int delayCs = delaysCs[Math.Min(fi++, delaysCs.Length - 1)];
                 var idx = new byte[px.Length];
                 for (int i = 0; i < px.Length; i++)
                 {

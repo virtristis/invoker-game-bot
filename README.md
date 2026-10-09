@@ -48,11 +48,14 @@ An AutoHotkey v2 bot and **coach** for the [invoker-game.com](https://invoker-ga
 
 </details>
 
-<details><summary>Intro on startup</summary>
+## ✨ Intro and exit
 
-![Intro](docs/intro.png)
-
-</details>
+<table>
+<tr>
+<td align="center" width="50%"><img src="docs/intro.gif" alt="Intro"><br><sub>On startup: the portrait in braille dots, Quas · Wex · Exort, INVOKE!</sub></td>
+<td align="center" width="50%"><img src="docs/exit.gif" alt="Exit"><br><sub>On exit: a Sun Strike burns the window away</sub></td>
+</tr>
+</table>
 
 ## 🎓 Coach mode: actually learn Invoker
 

@@ -7,7 +7,7 @@
 <meta name="description" content="AutoHotkey v2 coach and trainer for invoker-game.com: live combo hints, practice without the site, statistics and a progress chart. Educational project.">
 <meta property="og:title" content="Invoker Game Bot">
 <meta property="og:description" content="Learn Invoker's combos: live hints, timed practice with spell icons, progress chart.">
-<meta property="og:image" content="img/social-preview.png">
+<meta property="og:image" content="img/social-preview.png?v=1.8.3">
 <link rel="icon" href="img/icon.ico">
 <style>
   :root {
@@ -69,7 +69,10 @@
   h2 { font: 700 30px Georgia, "Microsoft YaHei", serif; margin: 0 0 8px; color: var(--gold1); }
   .sub { color: var(--muted); margin: 0 0 24px; }
   .shot { width: 100%; border-radius: 16px; border: 1px solid #2c3040; box-shadow: 0 20px 60px #0008; display: block; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .gifs { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .gifs figure { margin: 0; }
+  .gifs figcaption { color: var(--muted); font-size: 14px; text-align: center; margin-top: 10px; }
   .card { background: var(--card); border: 1px solid #262a38; border-radius: 16px; padding: 20px; }
   .card h3 { margin: 6px 0 6px; font-size: 18px; }
   .card p { margin: 0; color: #c3c7d4; font-size: 15px; }
@@ -91,7 +94,9 @@
   /* язык: прячем только тексты других языков, видимому ничего не переопределяем */
   html:not([lang="en"]) [data-en], html:not([lang="ru"]) [data-ru],
   html:not([lang="es"]) [data-es], html:not([lang="zh"]) [data-zh] { display: none !important; }
-  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } .tagline { letter-spacing: 3px; } }
+  @media (max-width: 980px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 760px) { .two, .gifs { grid-template-columns: 1fr; } .tagline { letter-spacing: 3px; } }
+  @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -127,7 +132,7 @@
   </header>
 
   <section>
-    <img class="shot" src="img/banner.png" alt="Invoker Bot windows in three colour themes and four languages">
+    <img class="shot" src="img/banner.png?v=1.8.3" alt="Invoker Bot windows in three colour themes and four languages">
   </section>
 
   <section>
@@ -167,6 +172,30 @@
         <p data-ru>Когда выходит новая версия, один клик скачивает её, проверяет SHA-256 и перезапускает программу.</p>
         <p data-es>Cuando sale una versión nueva, un clic la descarga, comprueba su SHA-256 y reinicia la app.</p>
         <p data-zh>有新版本时，点一下即可下载、校验 SHA-256 并重启程序。</p></div>
+      <div class="card"><div class="ico">✨</div><h3 data-en>Intro: Invoke!</h3><h3 data-ru>Заставка: Invoke!</h3><h3 data-es>Inicio: Invoke!</h3><h3 data-zh>开场：Invoke!</h3>
+        <p data-en>Invoker appears in braille dots, Quas · Wex · Exort light up and INVOKE! folds the intro into the app.</p>
+        <p data-ru>Инвокер проявляется точками Брайля, загораются Quas · Wex · Exort, и INVOKE! сворачивает заставку в программу.</p>
+        <p data-es>Invoker aparece en puntos braille, se encienden Quas · Wex · Exort e INVOKE! pliega la intro en la app.</p>
+        <p data-zh>卡尔以盲文点阵出现，Quas · Wex · Exort 依次点亮，INVOKE! 把开场收拢进程序。</p></div>
+      <div class="card"><div class="ico">☀️</div><h3 data-en>Sun Strike on exit</h3><h3 data-ru>Sun Strike при выходе</h3><h3 data-es>Sun Strike al salir</h3><h3 data-zh>退出时的天火</h3>
+        <p data-en>Close the window and a Sun Strike hits it: a golden target circle, a pillar of light, sparks.</p>
+        <p data-ru>Закрываешь окно — на него падает Sun Strike: золотой круг-прицел, столб света, искры.</p>
+        <p data-es>Cierra la ventana y cae un Sun Strike: un círculo dorado, una columna de luz, chispas.</p>
+        <p data-zh>关闭窗口时天火落下：金色瞄准圈、光柱和火花。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-en>Intro and exit</h2><h2 data-ru>Запуск и выход</h2><h2 data-es>Inicio y salida</h2><h2 data-zh>启动与退出</h2>
+    <p class="sub" data-en>Both are drawn by the app itself, frame by frame.</p>
+    <p class="sub" data-ru>И то и другое программа рисует сама, кадр за кадром.</p>
+    <p class="sub" data-es>Ambas las dibuja la propia app, fotograma a fotograma.</p>
+    <p class="sub" data-zh>两者都由程序自己逐帧绘制。</p>
+    <div class="gifs">
+      <figure><img class="shot gif" src="img/intro.gif?v=1.8.3" width="760" height="542" loading="lazy" alt="Intro: Invoker in braille dots, Quas, Wex, Exort, INVOKE!">
+        <figcaption data-en>On startup</figcaption><figcaption data-ru>Запуск</figcaption><figcaption data-es>Al iniciar</figcaption><figcaption data-zh>启动</figcaption></figure>
+      <figure><img class="shot gif" src="img/exit.gif?v=1.8.3" width="760" height="444" loading="lazy" alt="Exit: a Sun Strike burns the window away">
+        <figcaption data-en>On exit</figcaption><figcaption data-ru>Выход</figcaption><figcaption data-es>Al salir</figcaption><figcaption data-zh>退出</figcaption></figure>
     </div>
   </section>
 
@@ -198,11 +227,11 @@
         <li>每个技能的用时都会计入统计，弱项会随着你的进步而更新。</li>
       </ul>
     </div>
-    <img class="shot" src="img/stats.png" alt="Statistics window with the progress chart">
+    <img class="shot" src="img/stats.png?v=1.8.3" alt="Statistics window with the progress chart">
   </section>
 
   <section class="two demo">
-    <img class="shot gif" src="img/practice-run.gif" width="508" height="418" loading="lazy" alt="A full practice run inside the app">
+    <img class="shot gif" src="img/practice-run.gif?v=1.8.3" width="508" height="418" loading="lazy" alt="A full practice run inside the app">
     <div>
       <h2 data-en>Practice inside the app</h2><h2 data-ru>Тренировка внутри программы</h2><h2 data-es>Práctica dentro de la app</h2><h2 data-zh>程序内练习</h2>
       <p class="sub" data-en>A real run, frame by frame: 10 spells of New Invoker, one pause long enough for the hint, one mistake, then the result.</p>
@@ -237,7 +266,7 @@
   </section>
 
   <section>
-    <img class="shot" src="img/practice.png" alt="Practice window: spell icon, orbs, hint and results">
+    <img class="shot" src="img/practice.png?v=1.8.3" alt="Practice window: spell icon, orbs, hint and results">
   </section>
 
   <section>

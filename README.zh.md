@@ -48,11 +48,14 @@
 
 </details>
 
-<details><summary>启动动画</summary>
+## ✨ 启动与退出
 
-![开场动画](docs/intro.png)
-
-</details>
+<table>
+<tr>
+<td align="center" width="50%"><img src="docs/intro.gif" alt="启动"><br><sub>启动：盲文点阵肖像，Quas · Wex · Exort，INVOKE!</sub></td>
+<td align="center" width="50%"><img src="docs/exit.gif" alt="退出"><br><sub>退出：天火（Sun Strike）烧掉窗口</sub></td>
+</tr>
+</table>
 
 ## 🎓 教练模式：真正学会卡尔
 

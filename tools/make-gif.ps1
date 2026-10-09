@@ -44,5 +44,7 @@ foreach ($f in $files) {
 }
 $bg.Dispose()
 if (-not ('GifWriter' -as [type])) { Add-Type -Path "$PSScriptRoot\GifWriter.cs" -ReferencedAssemblies System.Drawing }
-$info = [GifWriter]::Write([string[]]$list, $Out, [int][Math]::Round($DelayMs / 10))
+# delays.txt next to the frames (one value in ms per frame) overrides -DelayMs
+$cs = if (Test-Path "$Frames\delays.txt") { [int[]](Get-Content "$Frames\delays.txt" | Where-Object { $_ } | ForEach-Object { [Math]::Max(2, [Math]::Round([int]$_ / 10)) }) } else { [int[]]@([Math]::Round($DelayMs / 10)) }
+$info = [GifWriter]::Write([string[]]$list, $Out, $cs)
 "saved $Out  ($info, $([Math]::Round((Get-Item $Out).Length / 1MB, 2)) MB)"

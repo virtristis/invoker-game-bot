@@ -48,11 +48,14 @@ Un bot y **entrenador** en AutoHotkey v2 para el entrenador [invoker-game.com](h
 
 </details>
 
-<details><summary>Intro al iniciar</summary>
+## ✨ Inicio y salida
 
-![Intro](docs/intro.png)
-
-</details>
+<table>
+<tr>
+<td align="center" width="50%"><img src="docs/intro.gif" alt="Inicio"><br><sub>Al iniciar: el retrato en puntos braille, Quas · Wex · Exort, INVOKE!</sub></td>
+<td align="center" width="50%"><img src="docs/exit.gif" alt="Salida"><br><sub>Al salir: un Sun Strike quema la ventana</sub></td>
+</tr>
+</table>
 
 ## 🎓 Modo entrenador: aprende Invoker de verdad
 
