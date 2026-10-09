@@ -20,16 +20,17 @@
   body {
     margin: 0; background: var(--bg); color: var(--text);
     font: 16px/1.6 "Segoe UI", system-ui, -apple-system, "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
-    background-image: radial-gradient(1200px 500px at 15% -10%, #2a1a4a 0%, transparent 60%),
-                      radial-gradient(900px 400px at 95% 0%, #13294a 0%, transparent 60%);
+    background-image: none;
+
     background-repeat: no-repeat;
   }
   a { color: var(--accent2); }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
   nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; margin: 0 -20px; gap: 12px; flex-wrap: wrap;
         position: sticky; top: 0; z-index: 20; background: rgba(15, 17, 23, .72); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid transparent; transition: border-color .2s; }
-  nav.scrolled { border-bottom-color: #262a38; }
+        border-bottom: 1px solid transparent; transition: border-color .2s;
+        box-shadow: 0 0 0 100vmax rgba(15, 17, 23, .72); clip-path: inset(0 -100vmax); }
+  nav.scrolled { border-bottom-color: #262a38; box-shadow: 0 0 0 100vmax rgba(15, 17, 23, .72), 0 1px 0 100vmax #262a38; }
   nav .brand { font: 700 18px Georgia, serif; letter-spacing: .5px; color: var(--gold1); text-decoration: none; }
   nav .links { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .lang { display: inline-flex; gap: 4px; }
@@ -54,8 +55,8 @@
   .hero-bg { position: absolute; z-index: 0; top: -64px; left: 50%; transform: translateX(-50%);
              width: min(100vw, 1600px); height: var(--bgh);
              background: url(img/hero.jpg?v=1.8.4) center top / cover no-repeat;
-             -webkit-mask-image: radial-gradient(ellipse 62% 78% at 50% 34%, #000 58%, transparent 100%);
-             mask-image: radial-gradient(ellipse 62% 78% at 50% 34%, #000 58%, transparent 100%); }
+             -webkit-mask-image: radial-gradient(ellipse 50% 62% at 50% 36%, #000 42%, transparent 100%);
+             mask-image: radial-gradient(ellipse 50% 62% at 50% 36%, #000 42%, transparent 100%); }
   @media (max-width: 760px) { header.hero { --bgh: calc(100vw * 0.95); padding-top: calc(var(--bgh) * 0.5); }
                               .hero-bg { width: 142vw; } }
   .orbs { display: flex; justify-content: center; gap: 18px; margin-bottom: 18px; }
