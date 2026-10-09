@@ -23,12 +23,12 @@
 
 ;@Ahk2Exe-SetName Invoker Game Bot
 ;@Ahk2Exe-SetDescription Invoker Game Bot (educational)
-;@Ahk2Exe-SetVersion 1.8.3
+;@Ahk2Exe-SetVersion 1.8.4
 ;@Ahk2Exe-SetCompanyName virtristis
 ;@Ahk2Exe-SetCopyright (c) 2026 virtristis - MIT License
 ;@Ahk2Exe-SetMainIcon assets\icon.ico
 
-VERSION    := "1.8.3"
+VERSION    := "1.8.4"
 AUTHOR     := "virtristis"
 AUTHOR_URL := "https://github.com/virtristis"
 REPO_URL   := "https://github.com/virtristis/invoker-game-bot"

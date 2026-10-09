@@ -4,7 +4,8 @@
 
 An AutoHotkey v2 bot and **coach** for the [invoker-game.com](https://invoker-game.com/) trainer. It can play by itself at a speed you control, or stay hands-off and show you the right combo while you play. Supports both **New** (10 spells) and **Old** (27 spells) Invoker.
 
-![Demo](docs/demo-speedrun.gif)
+<p align="center"><img src="docs/speedrun.gif" width="950" alt="Demo"></p>
+<p align="center"><sub>The bot at max speed on invoker-game.com: New Invoker, then Old, with the app's overlay on the right</sub></p>
 
 > [!IMPORTANT]
 > **This is an educational project.** It was made to show how desktop automation can read a web page through Windows UI Automation, and to help people learn Invoker combos. It is **not** meant for setting records, climbing leaderboards or passing off bot results as your own skill.

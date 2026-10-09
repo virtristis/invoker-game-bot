@@ -4,7 +4,8 @@
 
 Un bot y **entrenador** en AutoHotkey v2 para el entrenador [invoker-game.com](https://invoker-game.com/). Puede jugar solo a la velocidad que elijas, o no tocar nada y mostrarte el combo correcto mientras juegas tú. Funciona con Invoker **New** (10 hechizos) y **Old** (27 hechizos).
 
-![Demo](docs/demo-speedrun.gif)
+<p align="center"><img src="docs/speedrun.gif" width="950" alt="Demo"></p>
+<p align="center"><sub>El bot a máxima velocidad en invoker-game.com: primero New, luego Old, con la superposición de la app a la derecha</sub></p>
 
 > [!IMPORTANT]
 > **Es un proyecto educativo.** Muestra cómo un programa de escritorio puede leer una página web mediante Windows UI Automation y ayuda a aprender los combos de Invoker. **No** está pensado para batir récords, subir en las clasificaciones ni hacer pasar los resultados del bot como habilidad propia.

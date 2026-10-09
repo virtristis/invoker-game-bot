@@ -2,9 +2,13 @@
 
 All notable changes to this project are documented here.
 
-## [Unreleased]
+## [1.8.4] - 2026-10-09
+
+### Fixed
+- **The app could stop with an error** ("This value of type 'Integer' has no property named 'Hwnd'") when the mouse moved over a window while the overlay was being created, so the bot didn't start. The overlay's window handlers now check that the overlay is ready.
 
 ### Added
+- **A new speedrun GIF** at the top of the README and on the website: the bot at max speed on invoker-game.com, New and then Old, with the app's overlay.
 - **GIFs of the intro and of the Sun Strike exit** in the README and on the website, made by the app itself (`--selftest intro-gif`, `--selftest close-gif`).
 - The website: two new cards (intro, Sun Strike) in an even 4 × 2 grid, and a section with both GIFs.
 
@@ -25,5 +29,6 @@ All notable changes to this project are documented here.
 - `tools/make-banner.ps1` and `tools/make-docs-images.ps1` build these images from the app's screenshots; the self-test `--selftest shot-stages` renders the coach overlay stages.
 - Window screenshots in self-tests are now reliable on a hidden desktop as well.
 
+[1.8.4]: https://github.com/virtristis/invoker-game-bot/releases/tag/v1.8.4
 [1.8.3]: https://github.com/virtristis/invoker-game-bot/releases/tag/v1.8.3
 [1.8.2]: https://github.com/virtristis/invoker-game-bot/releases/tag/v1.8.2

@@ -337,7 +337,7 @@ WM_SETCURSOR(wParam, *) {
         return true
     }
     ; оверлей: в уголке — «размер», иначе — «двигать» (OV создаётся позже заставки — проверяем)
-    if IsSet(OV) && OV && (wParam = OV.Hwnd || wParam = ovPic.Hwnd) {
+    if IsSet(OV) && OV && (wParam = OV.Hwnd || ovPic && wParam = ovPic.Hwnd) {   ; ovPic появляется чуть позже OV
         CoordMode "Mouse", "Screen"
         MouseGetPos &mx, &my
         DllCall("SetCursor", "ptr", DllCall("LoadCursor", "ptr", 0, "ptr", OvInCorner(mx, my) ? 32642 : 32646, "ptr"))

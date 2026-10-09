@@ -88,7 +88,7 @@ OvInCorner(mx, my) {                                   ; экранные коо
     return mx > ox + ow - 22 * DPI && my > oy + oh - 22 * DPI
 }
 
-IsOv(hwnd) => IsSet(OV) && OV && (hwnd = OV.Hwnd || hwnd = ovPic.Hwnd)
+IsOv(hwnd) => IsSet(OV) && OV && (hwnd = OV.Hwnd || IsSet(ovPic) && ovPic && hwnd = ovPic.Hwnd)
 
 ; Перетаскивание целиком делает Windows (как окно за заголовок): так оно работает,
 ; даже пока тренер занят чтением страницы. Если потянули за уголок — во время
@@ -144,7 +144,7 @@ OvWheel(wParam, lParam, msg, hwnd) {
 }
 
 OvMenu(wParam, lParam, msg, hwnd) {
-    if (hwnd != OV.Hwnd && hwnd != ovPic.Hwnd)
+    if !IsOv(hwnd)
         return
     m := Menu()
     m.Add(T("ovReset"), (*) => OvReset())

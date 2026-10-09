@@ -4,7 +4,8 @@
 
 一个基于 AutoHotkey v2 的 [invoker-game.com](https://invoker-game.com/) 卡尔练习器机器人和**教练**。它可以按照你设定的速度自动完成游戏，也可以不按任何键，只在你自己玩的时候提示正确的组合。支持 **New**（10 个技能）和 **Old**（27 个技能）两种模式。
 
-![演示](docs/demo-speedrun.gif)
+<p align="center"><img src="docs/speedrun.gif" width="950" alt="演示"></p>
+<p align="center"><sub>机器人在 invoker-game.com 上以最快速度运行：先 New，再 Old，右侧为程序的浮窗</sub></p>
 
 > [!IMPORTANT]
 > **这是一个学习项目。** 它演示了桌面程序如何通过 Windows UI Automation 读取网页内容，并帮助大家学习卡尔的技能组合。它**不是**用来刷纪录、冲排行榜或把机器人的成绩冒充成自己的水平的。
