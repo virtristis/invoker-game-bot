@@ -71,7 +71,14 @@ El bot muestra lo que es posible. **El entrenador es lo que te hace mejorar a *t
 
 ## 🎯 Modo práctica: entrena sin el sitio
 
+<p align="center"><img src="docs/practice-run.gif" width="508" alt="Práctica completa"></p>
+<p align="center"><sub>Una práctica completa: 10 hechizos de New, una pista tras una pausa, un error y el resultado</sub></p>
+
+<details><summary>Capturas: New, Old y el resultado</summary>
+
 ![Modo práctica](docs/practice.png)
+
+</details>
 
 La práctica funciona entera dentro de la app, así que sirve sin internet y entre partidas.
 

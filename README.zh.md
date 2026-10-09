@@ -71,7 +71,14 @@
 
 ## 🎯 练习模式：不需要网站
 
+<p align="center"><img src="docs/practice-run.gif" width="508" alt="完整练习"></p>
+<p align="center"><sub>一次完整练习：New 的 10 个技能，停顿后出现提示，一次按错，最后是成绩</sub></p>
+
+<details><summary>截图：New、Old 和成绩</summary>
+
 ![练习模式](docs/practice.png)
+
+</details>
 
 练习完全在程序内进行，不联网、两局游戏之间都能练。
 

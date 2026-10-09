@@ -252,6 +252,60 @@ RenderDrill(outFile := "") {
         CvToPic(cv, dwPic)
 }
 
+; автотест --selftest drill-gif: кадры прохождения для GIF в README (%TEMP%\igb-shots\gif\f0001.png …).
+; Время виртуальное: перед каждым вызовом метки DS переводятся в «реальные» A_TickCount и обратно,
+; так что кадры идут ровно через FrameMs, сколько бы ни занимала отрисовка
+DrillGif() {
+    global Sound
+    static FrameMs := 80
+    if DS.loading {
+        SetTimer DrillGif, -300
+        return
+    }
+    Sound := false                                         ; без звука в конце
+    dir := A_Temp "\igb-shots\gif"
+    try DirDelete dir, true
+    DirCreate dir
+    v := {t: 0, start: 0, spell: 0, flash: -10000, end: 0, frame: 0}   ; v.t — «текущее» время, мс
+    ToReal() {
+        now := A_TickCount
+        DS.startTick := now - (v.t - v.start), DS.spellTick := now - (v.t - v.spell)
+        DS.flashTick := now - (v.t - v.flash), DS.endTick := now - (v.t - v.end)
+    }
+    FromReal() {
+        now := A_TickCount
+        v.start := v.t - (now - DS.startTick), v.spell := v.t - (now - DS.spellTick)
+        v.flash := v.t - (now - DS.flashTick), v.end := v.t - (now - DS.endTick)
+    }
+    Wait(ms) {                                             ; кадры, пока «идёт время»
+        loop Max(1, Round(ms / FrameMs)) {
+            ToReal()
+            RenderDrill(dir "\f" Format("{:04}", ++v.frame) ".png")
+            v.t += FrameMs
+        }
+    }
+    Press(ch) => (ToReal(), DrillKey(CurKeyMap[ch]), FromReal())
+    Wait(1600)                                             ; экран «Тренировка»
+    ToReal(), DrillSpace(), FromReal()
+    for i, spell in DS.queue {
+        combo := DrillCombo(spell)
+        Wait(i = 3 ? 3600 : Random(260, 520))              ; на третьем «задумались» — видна подсказка
+        if (i = 6) {                                       ; ошибка: не те шары
+            wrong := combo = "qqq" ? "www" : "qqq"
+            loop 3
+                Press(SubStr(wrong, A_Index, 1)), Wait(120)
+            Press("r"), Wait(700)
+        }
+        loop 3
+            Press(SubStr(combo, A_Index, 1)), Wait(i = 3 ? 260 : 120)
+        Press("r")
+        Wait(i = DS.queue.Length ? 160 : 240)
+    }
+    Wait(3600)                                             ; результат
+    FileAppend "gif frames " v.frame " in " dir "`n", "*", "UTF-8"
+    ExitApp
+}
+
 ; автотест --selftest drill-shots: проходит тренировку прямыми вызовами (без нажатий,
 ; работает и на скрытом рабочем столе) и сохраняет кадры окна в %TEMP%\igb-shots
 DrillShots() {

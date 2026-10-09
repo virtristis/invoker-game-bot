@@ -77,6 +77,8 @@
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; }
   .two ul { padding-left: 20px; margin: 0; color: #cfd2de; }
   .two li { margin: 6px 0; }
+  .demo { grid-template-columns: minmax(0, 508px) 1fr; }
+  .shot.gif { height: auto; border: 0; box-shadow: 0 20px 60px #0008, 0 0 40px #8b5cf633; }
   ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
   ol.steps li { counter-increment: s; background: var(--card); border: 1px solid #262a38; border-radius: 14px; padding: 14px 16px 14px 56px; position: relative; }
   ol.steps li::before {
@@ -197,6 +199,41 @@
       </ul>
     </div>
     <img class="shot" src="img/stats.png" alt="Statistics window with the progress chart">
+  </section>
+
+  <section class="two demo">
+    <img class="shot gif" src="img/practice-run.gif" width="508" height="418" loading="lazy" alt="A full practice run inside the app">
+    <div>
+      <h2 data-en>Practice inside the app</h2><h2 data-ru>Тренировка внутри программы</h2><h2 data-es>Práctica dentro de la app</h2><h2 data-zh>程序内练习</h2>
+      <p class="sub" data-en>A real run, frame by frame: 10 spells of New Invoker, one pause long enough for the hint, one mistake, then the result.</p>
+      <p class="sub" data-ru>Настоящий прогон, кадр за кадром: 10 спеллов New, одна заминка — и появляется подсказка, одна ошибка, затем итог.</p>
+      <p class="sub" data-es>Una partida real, fotograma a fotograma: 10 hechizos de New, una pausa en la que aparece la pista, un error y el resultado.</p>
+      <p class="sub" data-zh>真实的一局，逐帧录制：New 的 10 个技能，一次停顿后出现提示，一次按错，最后是成绩。</p>
+      <ul data-en>
+        <li>Press <kbd>Space</kbd>, look at the spell icon, build the orbs with <kbd>Q</kbd> <kbd>W</kbd> <kbd>E</kbd> and invoke with <kbd>R</kbd>.</li>
+        <li>Think longer than 2.5 seconds and the combo appears, coloured like the orbs.</li>
+        <li>A wrong spell counts as a mistake and shows the hint right away.</li>
+        <li>At the end: your time, seconds per spell and the three slowest spells with icons.</li>
+      </ul>
+      <ul data-ru>
+        <li>Жмёшь <kbd>Пробел</kbd>, смотришь на иконку спелла, собираешь шары <kbd>Q</kbd> <kbd>W</kbd> <kbd>E</kbd> и вызываешь <kbd>R</kbd>.</li>
+        <li>Думаешь дольше 2,5 секунды — появляется комбинация в цветах шаров.</li>
+        <li>Не тот спелл — это ошибка, и подсказка появляется сразу.</li>
+        <li>В конце: общее время, секунды на спелл и три самых медленных спелла с иконками.</li>
+      </ul>
+      <ul data-es>
+        <li>Pulsa <kbd>Espacio</kbd>, mira el icono del hechizo, junta los orbes con <kbd>Q</kbd> <kbd>W</kbd> <kbd>E</kbd> e invoca con <kbd>R</kbd>.</li>
+        <li>Si piensas más de 2,5 segundos, aparece la combinación con los colores de los orbes.</li>
+        <li>Un hechizo equivocado cuenta como error y muestra la pista enseguida.</li>
+        <li>Al final: tu tiempo, los segundos por hechizo y los tres hechizos más lentos con iconos.</li>
+      </ul>
+      <ul data-zh>
+        <li>按 <kbd>空格</kbd>，看技能图标，用 <kbd>Q</kbd> <kbd>W</kbd> <kbd>E</kbd> 切元素球，按 <kbd>R</kbd> 释放。</li>
+        <li>思考超过 2.5 秒，就会出现按元素颜色显示的组合。</li>
+        <li>切错技能算一次失误，并立即显示提示。</li>
+        <li>结束时显示总用时、每个技能的平均秒数，以及最慢的三个技能及其图标。</li>
+      </ul>
+    </div>
   </section>
 
   <section>

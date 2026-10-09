@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## [Unreleased]
+
+### Added
+- **The website in Español and 中文**, next to English and Русский.
+- **A GIF of a full practice run** in the README and on the website. It is made by the app itself: `--selftest drill-gif` plays a practice run on a virtual clock and saves the frames, `tools/make-gif.ps1` (with `tools/GifWriter.cs`) turns them into a small GIF.
+
 ## [1.8.2] - 2026-10-09
 
 ### Changed

@@ -71,7 +71,14 @@ The bot shows what's possible. **Coach is the part that makes *you* better.** It
 
 ## 🎯 Practice mode: train without the site
 
+<p align="center"><img src="docs/practice-run.gif" width="508" alt="Practice run"></p>
+<p align="center"><sub>A full practice run: 10 spells of New Invoker, a hint after a pause, one mistake and the result</sub></p>
+
+<details><summary>Screenshots: New, Old and the result</summary>
+
 ![Practice mode](docs/practice.png)
+
+</details>
 
 Practice runs entirely inside the app, so it works offline and between games.
 

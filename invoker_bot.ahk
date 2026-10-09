@@ -377,7 +377,7 @@ if SelfTest {
         try WinActivate "Invoker-Game"
     StartBot()
     if DrillMode
-        SetTimer InStr(SelfArg, "shots") ? DrillShots : DrillAutoPlay, -400
+        SetTimer InStr(SelfArg, "gif") ? DrillGif : InStr(SelfArg, "shots") ? DrillShots : DrillAutoPlay, -400
 }
 
 ; ======================= заставка =======================
